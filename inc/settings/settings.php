@@ -222,13 +222,7 @@ function woocommerce_primex_api_settings_init() {
         WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_woocommerce_api_consumer_secret',
         array(
             'type' => 'string',
-            'sanitize_callback' => function($new_value) {
-                $old_value = get_option(WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_woocommerce_api_consumer_secret');
-                if( $old_value != $new_value ){
-                    $new_value = primex_encrypt_password($new_value);
-                }
-                return $new_value;
-            },
+            'sanitize_callback' => 'sanitize_text_field',
             'default' => ''
         )
     );
@@ -401,13 +395,7 @@ function woocommerce_primex_api_settings_init() {
         WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_primex_api_key',
         array(
             'type' => 'string',
-            'sanitize_callback' => function($new_value) {
-                $old_value = get_option(WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_primex_api_key');
-                if( $old_value != $new_value ){
-                    $new_value = primex_encrypt_password($new_value);
-                }
-                return $new_value;
-            },
+            'sanitize_callback' => 'sanitize_text_field',
             'default' => ''
         )
     );
@@ -451,13 +439,7 @@ register_setting(
     WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_open_ai_api_key',
     array(
         'type' => 'string',
-        'sanitize_callback' => function($new_value) {
-            $old_value = get_option(WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_open_ai_api_key');
-            if( $old_value != $new_value ){
-                $new_value = primex_encrypt_password($new_value);
-            }
-            return $new_value;
-        },
+        'sanitize_callback' => 'sanitize_text_field',
         'default' => ''
     )
 );

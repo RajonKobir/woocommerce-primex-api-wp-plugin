@@ -42,16 +42,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // assigning values got from wp options
     $website_url = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_website_url');
     $woocommerce_api_consumer_key = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_woocommerce_api_consumer_key');
-    $woocommerce_api_consumer_secret = primex_decrypt_password(get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_woocommerce_api_consumer_secret'));
+    $woocommerce_api_consumer_secret = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_woocommerce_api_consumer_secret');
     $woocommerce_api_mul_val = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_woocommerce_api_mul_val');
     $primex_api_base_url = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_primex_api_base_url');
     $primex_customer_id = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_primex_customer_id');
-    $primex_api_key = primex_decrypt_password(get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_primex_api_key'));
+    $primex_api_key = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_primex_api_key');
     $primex_api_language = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_primex_api_language');
     $wc_prod_tags = primex_secure_input(get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_wc_prod_tags'));
 
     // open ai option values
-    $open_ai_api_key = primex_decrypt_password(get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_open_ai_api_key'));
+    $open_ai_api_key = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_open_ai_api_key');
     $open_ai_model = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_open_ai_model');
     $open_ai_temperature = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_open_ai_temperature');
     $open_ai_max_tokens = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_open_ai_max_tokens');
@@ -75,1287 +75,1287 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         break;
     }
 
-echo $open_ai_api_key;
 
-//     // WC Rest API SDK instantiating
-//     $woocommerce = new Client(
-//       $website_url,
-//       $woocommerce_api_consumer_key,
-//       $woocommerce_api_consumer_secret,
-//       [
-//         'version' => 'wc/v3',
-//       ]
-//     );
 
-//     // Primex API Queries
-//     require_once('PrimexApiQueries.php');
+    // WC Rest API SDK instantiating
+    $woocommerce = new Client(
+      $website_url,
+      $woocommerce_api_consumer_key,
+      $woocommerce_api_consumer_secret,
+      [
+        'version' => 'wc/v3',
+      ]
+    );
 
-//     // instantiating
-//     $ApiQuery = new PrimexApiQueries;
+    // Primex API Queries
+    require_once('PrimexApiQueries.php');
 
-//     try {
+    // instantiating
+    $ApiQuery = new PrimexApiQueries;
 
-//       // sending single product API request to Primex
-//       $primex_api_single_product = $ApiQuery->primex_api_single_product($primex_api_product_sku, $primex_api_base_url, $primex_customer_id, $primex_api_key, $primex_api_language);
+    try {
 
-//       } catch (PDOException $e) {
+      // sending single product API request to Primex
+      $primex_api_single_product = $ApiQuery->primex_api_single_product($primex_api_product_sku, $primex_api_base_url, $primex_customer_id, $primex_api_key, $primex_api_language);
 
-//         $resultHTML .= "Error: " . $e->getMessage();
+      } catch (PDOException $e) {
 
-//       }finally{
+        $resultHTML .= "Error: " . $e->getMessage();
 
-//         // assigning some useful values got from Primex API response
-//         $primex_api_single_product = json_decode($primex_api_single_product, true);
+      }finally{
 
-//         // if a valid response
-//         if(isset($primex_api_single_product["Master"][0]["Variants"])){
+        // assigning some useful values got from Primex API response
+        $primex_api_single_product = json_decode($primex_api_single_product, true);
 
-//           // initializing 
-//           $primex_cat_name = '';
-//           $primex_sub_cat_name = '';
-//           $primex_prod_variants = [];
-//           $primex_prod_name = '';
-//           $primex_prod_brand = '';
-//           $primex_prod_sku = '';
-//           $primex_prod_img = '';
-//           $primex_prod_desc = '';
-//           $primex_prod_short_desc = '';
-//           // used in product meta
-//           $Composite = '';
-//           $CountryOfOrigin = '';
-//           $Genre = '';
-//           $SleeveStyle = '';
-//           $Version = '';
-//           $Fitting = '';
-//           $AvailableSizes = '';
-//           $SubCollection = '';
-//           $ProductKey = '';
-//           $CommodityCode = '';
+        // if a valid response
+        if(isset($primex_api_single_product["Master"][0]["Variants"])){
 
-//           if(isset($primex_api_single_product["Master"][0]["Categories"]["Items"][0]["Name"])){
-//             $primex_cat_name = $primex_api_single_product["Master"][0]["Categories"]["Items"][0]["Name"];
-//           }
+          // initializing 
+          $primex_cat_name = '';
+          $primex_sub_cat_name = '';
+          $primex_prod_variants = [];
+          $primex_prod_name = '';
+          $primex_prod_brand = '';
+          $primex_prod_sku = '';
+          $primex_prod_img = '';
+          $primex_prod_desc = '';
+          $primex_prod_short_desc = '';
+          // used in product meta
+          $Composite = '';
+          $CountryOfOrigin = '';
+          $Genre = '';
+          $SleeveStyle = '';
+          $Version = '';
+          $Fitting = '';
+          $AvailableSizes = '';
+          $SubCollection = '';
+          $ProductKey = '';
+          $CommodityCode = '';
 
-//           if(isset( $primex_api_single_product["Master"][0]["Categories"]["Items"][0]["SubCategory"]["Name"] )){
-//             $primex_sub_cat_name = $primex_api_single_product["Master"][0]["Categories"]["Items"][0]["SubCategory"]["Name"];
-//           }
+          if(isset($primex_api_single_product["Master"][0]["Categories"]["Items"][0]["Name"])){
+            $primex_cat_name = $primex_api_single_product["Master"][0]["Categories"]["Items"][0]["Name"];
+          }
+
+          if(isset( $primex_api_single_product["Master"][0]["Categories"]["Items"][0]["SubCategory"]["Name"] )){
+            $primex_sub_cat_name = $primex_api_single_product["Master"][0]["Categories"]["Items"][0]["SubCategory"]["Name"];
+          }
         
-//           $primex_prod_variants = $primex_api_single_product["Master"][0]["Variants"];
+          $primex_prod_variants = $primex_api_single_product["Master"][0]["Variants"];
 
-//           if(isset( $primex_api_single_product["Master"][0]["Name"] )){
-//             $primex_prod_name = $primex_api_single_product["Master"][0]["Name"];
-//           }
+          if(isset( $primex_api_single_product["Master"][0]["Name"] )){
+            $primex_prod_name = $primex_api_single_product["Master"][0]["Name"];
+          }
 
-//           if(isset( $primex_api_single_product["Master"][0]["Brand"] )){
-//             $primex_prod_brand = $primex_api_single_product["Master"][0]["Brand"];
-//           }
+          if(isset( $primex_api_single_product["Master"][0]["Brand"] )){
+            $primex_prod_brand = $primex_api_single_product["Master"][0]["Brand"];
+          }
 
-//           if(isset( $primex_api_single_product["Master"][0]["Sku"] )){
-//             $primex_prod_sku = $primex_api_single_product["Master"][0]["Sku"];
-//           }
+          if(isset( $primex_api_single_product["Master"][0]["Sku"] )){
+            $primex_prod_sku = $primex_api_single_product["Master"][0]["Sku"];
+          }
 
-//           if(isset( $primex_api_single_product["Master"][0]["Images"]["Items"][0] )){
-//             $primex_prod_img = $primex_api_single_product["Master"][0]["Images"]["Items"][0];
-//           }
+          if(isset( $primex_api_single_product["Master"][0]["Images"]["Items"][0] )){
+            $primex_prod_img = $primex_api_single_product["Master"][0]["Images"]["Items"][0];
+          }
 
-//           if(isset( $primex_api_single_product["Master"][0]["Languages"]["Items"][0]["Description"] )){
-//             $primex_prod_desc = $primex_api_single_product["Master"][0]["Languages"]["Items"][0]["Description"];
-//           }
+          if(isset( $primex_api_single_product["Master"][0]["Languages"]["Items"][0]["Description"] )){
+            $primex_prod_desc = $primex_api_single_product["Master"][0]["Languages"]["Items"][0]["Description"];
+          }
 
-//           if(isset( $primex_api_single_product["Master"][0]["Languages"]["Items"][0]["Brief"] )){
-//             $primex_prod_short_desc = $primex_api_single_product["Master"][0]["Languages"]["Items"][0]["Brief"];
-//           }
+          if(isset( $primex_api_single_product["Master"][0]["Languages"]["Items"][0]["Brief"] )){
+            $primex_prod_short_desc = $primex_api_single_product["Master"][0]["Languages"]["Items"][0]["Brief"];
+          }
 
-//           // updated product name
-//           if(str_contains($primex_prod_name, $primex_prod_brand) && !str_contains($primex_prod_name, $primex_prod_sku)){
-//               $primex_prod_name = $primex_prod_name . ' #' . $primex_prod_sku;
-//           }
-//           elseif(!str_contains($primex_prod_name, $primex_prod_brand) && str_contains($primex_prod_name, $primex_prod_sku)){
-//               $primex_prod_name = $primex_prod_brand . ' ' . $primex_prod_name;
-//           }
-//           elseif(!str_contains($primex_prod_name, $primex_prod_brand) && !str_contains($primex_prod_name, $primex_prod_sku)){
-//               $primex_prod_name = $primex_prod_brand . ' ' . $primex_prod_name . ' #' . $primex_prod_sku;
-//           }
+          // updated product name
+          if(str_contains($primex_prod_name, $primex_prod_brand) && !str_contains($primex_prod_name, $primex_prod_sku)){
+              $primex_prod_name = $primex_prod_name . ' #' . $primex_prod_sku;
+          }
+          elseif(!str_contains($primex_prod_name, $primex_prod_brand) && str_contains($primex_prod_name, $primex_prod_sku)){
+              $primex_prod_name = $primex_prod_brand . ' ' . $primex_prod_name;
+          }
+          elseif(!str_contains($primex_prod_name, $primex_prod_brand) && !str_contains($primex_prod_name, $primex_prod_sku)){
+              $primex_prod_name = $primex_prod_brand . ' ' . $primex_prod_name . ' #' . $primex_prod_sku;
+          }
 
-//         // used in product meta
-//         if(isset( $primex_api_single_product["Master"][0]["Composite"] )){
-//           $Composite = $primex_api_single_product["Master"][0]["Composite"];
-//         }
-//         if(isset( $primex_api_single_product["Master"][0]["CountryOfOrigin"] )){
-//           $CountryOfOrigin = $primex_api_single_product["Master"][0]["CountryOfOrigin"];
-//         }
-//         if(isset( $primex_api_single_product["Master"][0]["Genre"] )){
-//           $Genre = $primex_api_single_product["Master"][0]["Genre"];
-//         }
-//         if(isset( $primex_api_single_product["Master"][0]["SleeveStyle"] )){
-//           $SleeveStyle = $primex_api_single_product["Master"][0]["SleeveStyle"];
-//         }
-//         if(isset( $primex_api_single_product["Master"][0]["Version"] )){
-//           $Version = $primex_api_single_product["Master"][0]["Version"];
-//         }
-//         if(isset( $primex_api_single_product["Master"][0]["Fitting"] )){
-//           $Fitting = $primex_api_single_product["Master"][0]["Fitting"];
-//         }
-//         if(isset( $primex_api_single_product["Master"][0]["AvailableSizes"] )){
-//           $AvailableSizes = $primex_api_single_product["Master"][0]["AvailableSizes"];
-//         }
-//         if(isset( $primex_api_single_product["Master"][0]["SubCollection"] )){
-//           $SubCollection = $primex_api_single_product["Master"][0]["SubCollection"];
-//         }
-//         if(isset( $primex_api_single_product["Master"][0]["ProductKey"] )){
-//           $ProductKey = $primex_api_single_product["Master"][0]["ProductKey"];
-//         }
-//         if(isset( $primex_api_single_product["Master"][0]["CommodityCode"] )){
-//           $CommodityCode = $primex_api_single_product["Master"][0]["CommodityCode"];
-//         }
+        // used in product meta
+        if(isset( $primex_api_single_product["Master"][0]["Composite"] )){
+          $Composite = $primex_api_single_product["Master"][0]["Composite"];
+        }
+        if(isset( $primex_api_single_product["Master"][0]["CountryOfOrigin"] )){
+          $CountryOfOrigin = $primex_api_single_product["Master"][0]["CountryOfOrigin"];
+        }
+        if(isset( $primex_api_single_product["Master"][0]["Genre"] )){
+          $Genre = $primex_api_single_product["Master"][0]["Genre"];
+        }
+        if(isset( $primex_api_single_product["Master"][0]["SleeveStyle"] )){
+          $SleeveStyle = $primex_api_single_product["Master"][0]["SleeveStyle"];
+        }
+        if(isset( $primex_api_single_product["Master"][0]["Version"] )){
+          $Version = $primex_api_single_product["Master"][0]["Version"];
+        }
+        if(isset( $primex_api_single_product["Master"][0]["Fitting"] )){
+          $Fitting = $primex_api_single_product["Master"][0]["Fitting"];
+        }
+        if(isset( $primex_api_single_product["Master"][0]["AvailableSizes"] )){
+          $AvailableSizes = $primex_api_single_product["Master"][0]["AvailableSizes"];
+        }
+        if(isset( $primex_api_single_product["Master"][0]["SubCollection"] )){
+          $SubCollection = $primex_api_single_product["Master"][0]["SubCollection"];
+        }
+        if(isset( $primex_api_single_product["Master"][0]["ProductKey"] )){
+          $ProductKey = $primex_api_single_product["Master"][0]["ProductKey"];
+        }
+        if(isset( $primex_api_single_product["Master"][0]["CommodityCode"] )){
+          $CommodityCode = $primex_api_single_product["Master"][0]["CommodityCode"];
+        }
 
 
-//         // $primex_atrributes = ["Brand", "Color", "Size", "BodyLengthWidth"];
-//         $primex_atrributes = ["Color", "Size"];
+        // $primex_atrributes = ["Brand", "Color", "Size", "BodyLengthWidth"];
+        $primex_atrributes = ["Color", "Size"];
 
-//         $primex_all_colors_array = [];
-//         $primex_all_sizes_array = [];
+        $primex_all_colors_array = [];
+        $primex_all_sizes_array = [];
 
-//         //initially putting first image
-//         $primex_all_image_src_array = [
-//           [
-//             'src' => $primex_prod_img,
-//             'name' => $primex_prod_name,
-//             'alt' => $primex_prod_name,
-//           ],
-//         ];
+        //initially putting first image
+        $primex_all_image_src_array = [
+          [
+            'src' => $primex_prod_img,
+            'name' => $primex_prod_name,
+            'alt' => $primex_prod_name,
+          ],
+        ];
 
-//         // creating color, size, images array
-//         if(count($primex_prod_variants) > 0){
-//           foreach($primex_prod_variants as $key => $single_variant){
+        // creating color, size, images array
+        if(count($primex_prod_variants) > 0){
+          foreach($primex_prod_variants as $key => $single_variant){
 
-//               if($single_variant["Available"] == true || $single_variant["OnSale"] == true){
+              if($single_variant["Available"] == true || $single_variant["OnSale"] == true){
 
-//                 $single_variant_name = $single_variant["Name"];
-//                 $primex_api_variant_sku = $single_variant["Sku"];
-//                 $single_variant_name = $single_variant["Name"] . ' #' . $primex_api_variant_sku;
+                $single_variant_name = $single_variant["Name"];
+                $primex_api_variant_sku = $single_variant["Sku"];
+                $single_variant_name = $single_variant["Name"] . ' #' . $primex_api_variant_sku;
 
-//                 if($single_variant["Color"] != '' && !in_array($single_variant["Color"], $primex_all_colors_array)){
+                if($single_variant["Color"] != '' && !in_array($single_variant["Color"], $primex_all_colors_array)){
 
-//                   array_push($primex_all_colors_array, $single_variant["Color"]);
+                  array_push($primex_all_colors_array, $single_variant["Color"]);
 
-//                   // creating product images array
-//                   if(isset($single_variant["Images"]["Items"][0])){
+                  // creating product images array
+                  if(isset($single_variant["Images"]["Items"][0])){
 
-//                     if($single_variant["Images"]["Items"][0] != ''){
+                    if($single_variant["Images"]["Items"][0] != ''){
 
-//                       $temp_array = [
-//                         'src' => $single_variant["Images"]["Items"][0],
-//                         'name' => $single_variant_name,
-//                         'alt' => $single_variant_name,
-//                       ];
+                      $temp_array = [
+                        'src' => $single_variant["Images"]["Items"][0],
+                        'name' => $single_variant_name,
+                        'alt' => $single_variant_name,
+                      ];
               
-//                       array_push($primex_all_image_src_array,  $temp_array);
+                      array_push($primex_all_image_src_array,  $temp_array);
 
-//                     }
+                    }
 
-//                   }
+                  }
 
-//                 }
+                }
 
-//                 if($single_variant["Size"] != '' && !in_array($single_variant["Size"], $primex_all_sizes_array)){
-//                   array_push($primex_all_sizes_array, $single_variant["Size"]);
-//                 }
+                if($single_variant["Size"] != '' && !in_array($single_variant["Size"], $primex_all_sizes_array)){
+                  array_push($primex_all_sizes_array, $single_variant["Size"]);
+                }
 
-//               }
+              }
 
-//             }
-//           }
-//           // end of foreach
-
-
-
-// // //  open AI starts here 
-
-// if($open_ai_api_key && $open_ai_api_key != ''){
-//   if( $open_ai_on_off == 'yes' ){
-//     $resultHTML .= '<p class="text-center">OpenAI API has been started...</p>';
-//     // creating better description
-//     $open_ai_prompt = 'create a better product description in '.$language_full_name.' from this description &bdquo;'.$primex_prod_desc.'&bdquo;';
-//     try {
-//       // sending request to openAI
-//       $open_ai_request_response = $ApiQuery->open_ai_request_response( $open_ai_api_key, $open_ai_model, $open_ai_prompt, $open_ai_temperature, $open_ai_max_tokens, $open_ai_frequency_penalty, $open_ai_presence_penalty );
-//     } catch (PDOException $e) {
-//       $resultHTML .= "Error: " . $e->getMessage();
-//     }finally{
-//       if($open_ai_request_response != ''){
-//         $primex_prod_desc = str_replace('"', '', $open_ai_request_response);
-//         $resultHTML .= '<p class="text-center">OpenAI API has updated the product description...</p>';
-//       }else{
-//         $resultHTML .= '<p class="text-center">OpenAI API could not update the product description...</p>';
-//       }
-//     }
-
-//     // creating better short-description
-//     $open_ai_prompt = 'create a better product short description in '.$language_full_name.' from this short description &bdquo;'.$primex_prod_short_desc.'&bdquo;';
-//     try {
-//       // sending request to openAI
-//       $open_ai_request_response = $ApiQuery->open_ai_request_response( $open_ai_api_key, $open_ai_model, $open_ai_prompt, $open_ai_temperature, $open_ai_max_tokens, $open_ai_frequency_penalty, $open_ai_presence_penalty );
-//     } catch (PDOException $e) {
-//       $resultHTML .= "Error: " . $e->getMessage();
-//     }finally{
-//       if($open_ai_request_response != ''){
-//         $primex_prod_short_desc = str_replace('"', '', $open_ai_request_response);
-//         $resultHTML .= '<p class="text-center">OpenAI API has updated the product short-description...</p>';
-//       }else{
-//         $resultHTML .= '<p class="text-center">OpenAI API could not update the product short-description...</p>';
-//       }
-//     }
-
-
-//     if( $custom_tags_on_off != 'yes' ){
-//       $open_ai_prompt = 'create comma separated string of product tags from this description in '.$language_full_name.' &bdquo;'.$primex_prod_desc.'&bdquo;';
-//       try {
-//         // sending request to openAI
-//         $open_ai_request_response = $ApiQuery->open_ai_request_response( $open_ai_api_key, $open_ai_model, $open_ai_prompt, $open_ai_temperature, $open_ai_max_tokens, $open_ai_frequency_penalty, $open_ai_presence_penalty );
-//       } catch (PDOException $e) {
-//         $resultHTML .= "Error: " . $e->getMessage();
-//       }finally{
-//         if($open_ai_request_response != ''){
-//           $wc_prod_tags = primex_secure_input($open_ai_request_response);
-//           $resultHTML .= '<p class="text-center">OpenAI API has updated the product tags...</p>';
-//         }else{
-//           $resultHTML .= '<p class="text-center">OpenAI API could not update the product tags...</p>';
-//         }
-//       }
-//     }
-//   }
-// }else{
-//   $resultHTML .= '<p class="text-center">OpenAI API Key is missing. Started Default Import...</p>';
-// }
-
-// // //  open AI ends here 
+            }
+          }
+          // end of foreach
 
 
 
+// //  open AI starts here 
 
-//           // getting all WC categories
-//           $product_category_list = [];
+if($open_ai_api_key && $open_ai_api_key != ''){
+  if( $open_ai_on_off == 'yes' ){
+    $resultHTML .= '<p class="text-center">OpenAI API has been started...</p>';
+    // creating better description
+    $open_ai_prompt = 'create a better product description in '.$language_full_name.' from this description &bdquo;'.$primex_prod_desc.'&bdquo;';
+    try {
+      // sending request to openAI
+      $open_ai_request_response = $ApiQuery->open_ai_request_response( $open_ai_api_key, $open_ai_model, $open_ai_prompt, $open_ai_temperature, $open_ai_max_tokens, $open_ai_frequency_penalty, $open_ai_presence_penalty );
+    } catch (PDOException $e) {
+      $resultHTML .= "Error: " . $e->getMessage();
+    }finally{
+      if($open_ai_request_response != ''){
+        $primex_prod_desc = str_replace('"', '', $open_ai_request_response);
+        $resultHTML .= '<p class="text-center">OpenAI API has updated the product description...</p>';
+      }else{
+        $resultHTML .= '<p class="text-center">OpenAI API could not update the product description...</p>';
+      }
+    }
 
-//           // initializing
-//           $page = 1;
+    // creating better short-description
+    $open_ai_prompt = 'create a better product short description in '.$language_full_name.' from this short description &bdquo;'.$primex_prod_short_desc.'&bdquo;';
+    try {
+      // sending request to openAI
+      $open_ai_request_response = $ApiQuery->open_ai_request_response( $open_ai_api_key, $open_ai_model, $open_ai_prompt, $open_ai_temperature, $open_ai_max_tokens, $open_ai_frequency_penalty, $open_ai_presence_penalty );
+    } catch (PDOException $e) {
+      $resultHTML .= "Error: " . $e->getMessage();
+    }finally{
+      if($open_ai_request_response != ''){
+        $primex_prod_short_desc = str_replace('"', '', $open_ai_request_response);
+        $resultHTML .= '<p class="text-center">OpenAI API has updated the product short-description...</p>';
+      }else{
+        $resultHTML .= '<p class="text-center">OpenAI API could not update the product short-description...</p>';
+      }
+    }
 
-//           // infinite loop
-//           while(1 == 1) {
 
-//             // initializing for grabbing all categories
-//             $data = [
-//               'page' => $page,
-//               'per_page' => 100,
-//             ];
+    if( $custom_tags_on_off != 'yes' ){
+      $open_ai_prompt = 'create comma separated string of product tags from this description in '.$language_full_name.' &bdquo;'.$primex_prod_desc.'&bdquo;';
+      try {
+        // sending request to openAI
+        $open_ai_request_response = $ApiQuery->open_ai_request_response( $open_ai_api_key, $open_ai_model, $open_ai_prompt, $open_ai_temperature, $open_ai_max_tokens, $open_ai_frequency_penalty, $open_ai_presence_penalty );
+      } catch (PDOException $e) {
+        $resultHTML .= "Error: " . $e->getMessage();
+      }finally{
+        if($open_ai_request_response != ''){
+          $wc_prod_tags = primex_secure_input($open_ai_request_response);
+          $resultHTML .= '<p class="text-center">OpenAI API has updated the product tags...</p>';
+        }else{
+          $resultHTML .= '<p class="text-center">OpenAI API could not update the product tags...</p>';
+        }
+      }
+    }
+  }
+}else{
+  $resultHTML .= '<p class="text-center">OpenAI API Key is missing. Started Default Import...</p>';
+}
 
-//             try{
-//               // getting all WC categories
-//               $product_category_list_temp = $woocommerce->get('products/categories', $data);
+// //  open AI ends here 
 
-//             } catch (PDOException $e) {
 
-//               $resultHTML .= "Error: " . $e->getMessage();
+
+
+          // getting all WC categories
+          $product_category_list = [];
+
+          // initializing
+          $page = 1;
+
+          // infinite loop
+          while(1 == 1) {
+
+            // initializing for grabbing all categories
+            $data = [
+              'page' => $page,
+              'per_page' => 100,
+            ];
+
+            try{
+              // getting all WC categories
+              $product_category_list_temp = $woocommerce->get('products/categories', $data);
+
+            } catch (PDOException $e) {
+
+              $resultHTML .= "Error: " . $e->getMessage();
       
-//             } 
+            } 
 
-//             $product_category_list = array_merge($product_category_list, $product_category_list_temp);
+            $product_category_list = array_merge($product_category_list, $product_category_list_temp);
 
-//             if( count($product_category_list_temp) < 100 ){
-//               break;
-//             }
+            if( count($product_category_list_temp) < 100 ){
+              break;
+            }
 
-//             $page++;
+            $page++;
 
-//           }
-//           // infinite loop ends here
+          }
+          // infinite loop ends here
 
 
-//             // creating all category names array
-//             $product_category_names = [];
+            // creating all category names array
+            $product_category_names = [];
 
-//             foreach($product_category_list as $key => $single_category){
+            foreach($product_category_list as $key => $single_category){
 
-//               $product_category_names[$single_category->id] = primex_secure_input($single_category->name);
+              $product_category_names[$single_category->id] = primex_secure_input($single_category->name);
 
-//             }
+            }
 
-//             // checking category names exist or not
-//             $key1 = array_search(primex_secure_input($primex_cat_name), $product_category_names);
+            // checking category names exist or not
+            $key1 = array_search(primex_secure_input($primex_cat_name), $product_category_names);
 
-//             // creating WC category
-//             if ($key1 !== false) {
+            // creating WC category
+            if ($key1 !== false) {
 
-//               $resultHTML .= '<p class="text-center">Category ('.$primex_cat_name.') already exists!</p>';
+              $resultHTML .= '<p class="text-center">Category ('.$primex_cat_name.') already exists!</p>';
 
-//             }else{
+            }else{
 
-//               $category = [
-//                   'name' => $primex_cat_name
-//               ];
+              $category = [
+                  'name' => $primex_cat_name
+              ];
 
-//               try {
+              try {
 
-//                 $callBack1 = $woocommerce->post('products/categories', $category);
+                $callBack1 = $woocommerce->post('products/categories', $category);
 
-//               } catch (PDOException $e) {
+              } catch (PDOException $e) {
 
-//                 $resultHTML .= "Error: " . $e->getMessage();
+                $resultHTML .= "Error: " . $e->getMessage();
         
-//               }finally{
+              }finally{
 
-//                 $resultHTML .= '<p class="text-center">Category ('.$primex_cat_name.') has been created!</p>';
+                $resultHTML .= '<p class="text-center">Category ('.$primex_cat_name.') has been created!</p>';
 
-//               }
+              }
 
-//             }
+            }
 
 
-//             // checking sub-category names exist or not
-//             $key2 = array_search(primex_secure_input($primex_sub_cat_name), $product_category_names);
+            // checking sub-category names exist or not
+            $key2 = array_search(primex_secure_input($primex_sub_cat_name), $product_category_names);
 
-//             // creating WC sub-category
-//             if ($key2 !== false) {
+            // creating WC sub-category
+            if ($key2 !== false) {
 
-//               $resultHTML .= '<p class="text-center">Sub-Category ('.$primex_sub_cat_name.') already exists!</p>';
+              $resultHTML .= '<p class="text-center">Sub-Category ('.$primex_sub_cat_name.') already exists!</p>';
 
-//             }else{
+            }else{
 
-//               $sub_category = [
-//                   'name' => $primex_sub_cat_name,
-//                   'parent' => (isset($callBack1->id)) ? $callBack1->id : $key1
-//               ];
+              $sub_category = [
+                  'name' => $primex_sub_cat_name,
+                  'parent' => (isset($callBack1->id)) ? $callBack1->id : $key1
+              ];
 
-//               try {
+              try {
 
-//                 $callBack2 = $woocommerce->post('products/categories', $sub_category);
+                $callBack2 = $woocommerce->post('products/categories', $sub_category);
 
-//               } catch (PDOException $e) {
+              } catch (PDOException $e) {
 
-//                 $resultHTML .= "Error: " . $e->getMessage();
+                $resultHTML .= "Error: " . $e->getMessage();
         
-//               }finally{
+              }finally{
 
-//                 $resultHTML .= '<p class="text-center">Sub-Category ('.$primex_sub_cat_name.') has been created!</p>';
+                $resultHTML .= '<p class="text-center">Sub-Category ('.$primex_sub_cat_name.') has been created!</p>';
 
-//               }
+              }
 
-//             }
+            }
 
 
-//             // checking sub-category names exist or not
-//             $key5 = array_search(primex_secure_input($primex_prod_brand), $product_category_names);
+            // checking sub-category names exist or not
+            $key5 = array_search(primex_secure_input($primex_prod_brand), $product_category_names);
 
-//             // creating WC sub-category
-//             if ($key5 !== false) {
+            // creating WC sub-category
+            if ($key5 !== false) {
 
-//               $resultHTML .= '<p class="text-center">Sub-Category ('.$primex_prod_brand.') already exists!</p>';
+              $resultHTML .= '<p class="text-center">Sub-Category ('.$primex_prod_brand.') already exists!</p>';
 
-//             }else{
+            }else{
 
-//               $sub_category = [
-//                   'name' => $primex_prod_brand,
-//                   'parent' => (isset($callBack1->id)) ? $callBack1->id : $key1
-//               ];
+              $sub_category = [
+                  'name' => $primex_prod_brand,
+                  'parent' => (isset($callBack1->id)) ? $callBack1->id : $key1
+              ];
 
-//               try {
+              try {
 
-//                 $callBack5 = $woocommerce->post('products/categories', $sub_category);
+                $callBack5 = $woocommerce->post('products/categories', $sub_category);
 
-//               } catch (PDOException $e) {
+              } catch (PDOException $e) {
 
-//                 $resultHTML .= "Error: " . $e->getMessage();
+                $resultHTML .= "Error: " . $e->getMessage();
         
-//               }finally{
+              }finally{
 
-//                 $resultHTML .= '<p class="text-center">Sub-Category ('.$primex_prod_brand.') has been created!</p>';
+                $resultHTML .= '<p class="text-center">Sub-Category ('.$primex_prod_brand.') has been created!</p>';
 
-//               }
+              }
 
-//             }
-//             // creating category and sub-category ends here
+            }
+            // creating category and sub-category ends here
 
     
 
-//             try {
+            try {
 
-//               // getting all WC attributes
-//               $wc_all_attributes = $woocommerce->get('products/attributes');
+              // getting all WC attributes
+              $wc_all_attributes = $woocommerce->get('products/attributes');
 
-//             }catch (PDOException $e) {
+            }catch (PDOException $e) {
 
-//               $resultHTML .= "Error: " . $e->getMessage();
+              $resultHTML .= "Error: " . $e->getMessage();
 
-//             }finally{
+            }finally{
 
-//               // creating all attributes array
-//               $wc_all_attributes_array = [];
+              // creating all attributes array
+              $wc_all_attributes_array = [];
 
-//               if(count($wc_all_attributes) != 0){
+              if(count($wc_all_attributes) != 0){
 
-//                 foreach($wc_all_attributes as $id => $single_attribute){
+                foreach($wc_all_attributes as $id => $single_attribute){
 
-//                   $wc_all_attributes_array[$single_attribute->id] = $single_attribute->name;
+                  $wc_all_attributes_array[$single_attribute->id] = $single_attribute->name;
 
-//                 }
+                }
 
-//               }
+              }
 
 
-//               // loop through all attributes & create if not exists
-//               foreach($primex_atrributes as $key => $single_attribute){
+              // loop through all attributes & create if not exists
+              foreach($primex_atrributes as $key => $single_attribute){
 
-//                 if(count($wc_all_attributes_array) != 0){
+                if(count($wc_all_attributes_array) != 0){
                   
-//                   if(!in_array($single_attribute, $wc_all_attributes_array)){
+                  if(!in_array($single_attribute, $wc_all_attributes_array)){
 
-//                     $data = [
-//                         'name' => $single_attribute,
-//                         'slug' => str_replace(' ', '_', $single_attribute),
-//                         'type' => 'select',
-//                         'order_by' => 'menu_order',
-//                         'has_archives' => true
-//                     ];
+                    $data = [
+                        'name' => $single_attribute,
+                        'slug' => str_replace(' ', '_', $single_attribute),
+                        'type' => 'select',
+                        'order_by' => 'menu_order',
+                        'has_archives' => true
+                    ];
 
-//                     try {
+                    try {
 
-//                       $wc_create_attribute = $woocommerce->post('products/attributes', $data);
+                      $wc_create_attribute = $woocommerce->post('products/attributes', $data);
 
-//                     } catch (PDOException $e) {
+                    } catch (PDOException $e) {
 
-//                       $resultHTML .= "Error: " . $e->getMessage();
+                      $resultHTML .= "Error: " . $e->getMessage();
               
-//                     }finally{
+                    }finally{
 
-//                       $resultHTML .= '<p class="text-center">Attribute '.($key + 1).' ('.$single_attribute.') created successfully!</p>';
+                      $resultHTML .= '<p class="text-center">Attribute '.($key + 1).' ('.$single_attribute.') created successfully!</p>';
 
-//                     }
+                    }
                     
-//                   }else{
-//                     $resultHTML .= '<p class="text-center">Attribute '.($key + 1).' ('.$single_attribute.') already exists!</p>';
-//                   }
+                  }else{
+                    $resultHTML .= '<p class="text-center">Attribute '.($key + 1).' ('.$single_attribute.') already exists!</p>';
+                  }
 
-//                 }else{
+                }else{
 
-//                 $data = [
-//                     'name' => $single_attribute,
-//                     'slug' => str_replace(' ', '_', $single_attribute),
-//                     'type' => 'select',
-//                     'order_by' => 'menu_order',
-//                     'has_archives' => true
-//                 ];
+                $data = [
+                    'name' => $single_attribute,
+                    'slug' => str_replace(' ', '_', $single_attribute),
+                    'type' => 'select',
+                    'order_by' => 'menu_order',
+                    'has_archives' => true
+                ];
 
-//                 try {
+                try {
 
-//                   $wc_create_attribute = $woocommerce->post('products/attributes', $data);
+                  $wc_create_attribute = $woocommerce->post('products/attributes', $data);
 
-//                 } catch (PDOException $e) {
+                } catch (PDOException $e) {
 
-//                   $resultHTML .= "Error: " . $e->getMessage();
+                  $resultHTML .= "Error: " . $e->getMessage();
           
-//                 }finally{
+                }finally{
 
-//                   $resultHTML .= '<p class="text-center">Attribute '.($key + 1).' ('.$single_attribute.') created successfully!</p>';
+                  $resultHTML .= '<p class="text-center">Attribute '.($key + 1).' ('.$single_attribute.') created successfully!</p>';
 
-//                 }
+                }
 
-//               }
+              }
 
-//             }
-//             }
-//             // create attribute ends here
+            }
+            }
+            // create attribute ends here
 
       
-//             try {
-//               // getting all attributes again
-//               $wc_all_attributes = $woocommerce->get('products/attributes');
-//             }catch (PDOException $e) {
-//               $resultHTML .= "Error: " . $e->getMessage();
-//             }finally{
-//               // creating avilable attributes array
-//               $wc_all_attributes_array = [];
-//               if(count($wc_all_attributes) != 0){
-//                 foreach($wc_all_attributes as $id => $single_attribute){
-//                   $wc_all_attributes_array[$single_attribute->id] = $single_attribute->name;
-//                 }
-//               }
-//             }
+            try {
+              // getting all attributes again
+              $wc_all_attributes = $woocommerce->get('products/attributes');
+            }catch (PDOException $e) {
+              $resultHTML .= "Error: " . $e->getMessage();
+            }finally{
+              // creating avilable attributes array
+              $wc_all_attributes_array = [];
+              if(count($wc_all_attributes) != 0){
+                foreach($wc_all_attributes as $id => $single_attribute){
+                  $wc_all_attributes_array[$single_attribute->id] = $single_attribute->name;
+                }
+              }
+            }
 
 
-//               // getting all WC products
-//               $wc_all_products = [];
-//               // initializing
-//               $page = 1;
-//               // infinite loop
-//               while(1 == 1) {
-//                 // initializing for grabbing all products
-//                 $data = [
-//                   'page' => $page,
-//                   'per_page' => 100,
-//                 ];
-//                 try{
-//                   // getting all WC products
-//                   $all_products_list_temp = $woocommerce->get('products',  $data);
+              // getting all WC products
+              $wc_all_products = [];
+              // initializing
+              $page = 1;
+              // infinite loop
+              while(1 == 1) {
+                // initializing for grabbing all products
+                $data = [
+                  'page' => $page,
+                  'per_page' => 100,
+                ];
+                try{
+                  // getting all WC products
+                  $all_products_list_temp = $woocommerce->get('products',  $data);
     
-//                 } catch (PDOException $e) {
+                } catch (PDOException $e) {
     
-//                   $resultHTML .= "Error: " . $e->getMessage();
+                  $resultHTML .= "Error: " . $e->getMessage();
           
-//                 } 
+                } 
     
-//                 $wc_all_products = array_merge($wc_all_products, $all_products_list_temp);
+                $wc_all_products = array_merge($wc_all_products, $all_products_list_temp);
     
-//                 if( count($all_products_list_temp) < 100 ){
-//                   break;
-//                 }
-//                 $page++;
-//               }
-//               // infinite loop ends here
+                if( count($all_products_list_temp) < 100 ){
+                  break;
+                }
+                $page++;
+              }
+              // infinite loop ends here
 
 
           
-//                   // creating all products array
-//                   $wc_all_prod_array = [];
+                  // creating all products array
+                  $wc_all_prod_array = [];
 
-//                   if($wc_all_products){
+                  if($wc_all_products){
 
-//                     if(count($wc_all_products) != 0){
+                    if(count($wc_all_products) != 0){
 
-//                       foreach($wc_all_products as $key => $single_wc_prod){
+                      foreach($wc_all_products as $key => $single_wc_prod){
 
-//                         $wc_all_prod_array[$single_wc_prod->id] = $single_wc_prod->sku;
+                        $wc_all_prod_array[$single_wc_prod->id] = $single_wc_prod->sku;
 
-//                       }
+                      }
                       
-//                     }
+                    }
 
-//                   }
+                  }
 
 
 
-//               // getting all WC product tags
-//               $retrieved_all_tags = [];
-//               // initializing
-//               $page = 1;
-//               // infinite loop
-//               while(1 == 1) {
-//                 // initializing for grabbing all categories
-//                 $data = [
-//                   'page' => $page,
-//                   'per_page' => 100,
-//                 ];
-//                 try{
-//                   // getting all WC products
-//                   $retrieved_all_tags_temp = $woocommerce->get('products/tags', $data);
+              // getting all WC product tags
+              $retrieved_all_tags = [];
+              // initializing
+              $page = 1;
+              // infinite loop
+              while(1 == 1) {
+                // initializing for grabbing all categories
+                $data = [
+                  'page' => $page,
+                  'per_page' => 100,
+                ];
+                try{
+                  // getting all WC products
+                  $retrieved_all_tags_temp = $woocommerce->get('products/tags', $data);
     
-//                 } catch (PDOException $e) {
+                } catch (PDOException $e) {
     
-//                   $resultHTML .= "Error: " . $e->getMessage();
+                  $resultHTML .= "Error: " . $e->getMessage();
           
-//                 } 
+                } 
     
-//                 $retrieved_all_tags = array_merge($retrieved_all_tags, $retrieved_all_tags_temp);
+                $retrieved_all_tags = array_merge($retrieved_all_tags, $retrieved_all_tags_temp);
     
-//                 if( count($retrieved_all_tags_temp) < 100 ){
-//                   break;
-//                 }
-//                 $page++;
-//               }
-//               // infinite loop ends here
+                if( count($retrieved_all_tags_temp) < 100 ){
+                  break;
+                }
+                $page++;
+              }
+              // infinite loop ends here
 
 
-//               // creating all tags array
-//               $tag_names_array = [];
+              // creating all tags array
+              $tag_names_array = [];
 
-//               if($retrieved_all_tags){
+              if($retrieved_all_tags){
 
-//                 if(count($retrieved_all_tags) != 0){
+                if(count($retrieved_all_tags) != 0){
 
-//                   foreach($retrieved_all_tags as $key => $single_tag){
+                  foreach($retrieved_all_tags as $key => $single_tag){
 
-//                     $tag_names_array[$single_tag->id] = primex_secure_input($single_tag->name);
+                    $tag_names_array[$single_tag->id] = primex_secure_input($single_tag->name);
 
-//                   }
+                  }
 
-//                 }
+                }
 
-//               }
+              }
 
-//               // creating tags array
-//               $tags_array = [];
-//               $final_tag_names_array = [];
+              // creating tags array
+              $tags_array = [];
+              $final_tag_names_array = [];
               
-//               // creating the tag if not exists
-//               if($wc_prod_tags != ''){
+              // creating the tag if not exists
+              if($wc_prod_tags != ''){
 
-//                 $wc_prod_tags = explode(',' , $wc_prod_tags);
+                $wc_prod_tags = explode(',' , $wc_prod_tags);
 
-//                 if(count($wc_prod_tags) > 0){
+                if(count($wc_prod_tags) > 0){
 
-//                   foreach($wc_prod_tags as $key => $single_tag){
+                  foreach($wc_prod_tags as $key => $single_tag){
 
-//                     $single_tag = primex_secure_input($single_tag);
+                    $single_tag = primex_secure_input($single_tag);
 
-//                     $tag_key = array_search($single_tag, $tag_names_array);
+                    $tag_key = array_search($single_tag, $tag_names_array);
 
-//                     if ($tag_key !== false) {
+                    if ($tag_key !== false) {
 
-//                       array_push($tags_array,[
-//                         'id' => $tag_key,
-//                       ]);
-//                       array_push($final_tag_names_array, $single_tag);
+                      array_push($tags_array,[
+                        'id' => $tag_key,
+                      ]);
+                      array_push($final_tag_names_array, $single_tag);
 
-//                       $resultHTML .= '<p class="text-center">Tag '.($key + 1).' ('.$single_tag.') already exists!</p>';
+                      $resultHTML .= '<p class="text-center">Tag '.($key + 1).' ('.$single_tag.') already exists!</p>';
 
-//                     }else{
+                    }else{
 
-//                       $data = [
-//                           'name' => $single_tag
-//                       ];
+                      $data = [
+                          'name' => $single_tag
+                      ];
 
-//                       try {
+                      try {
 
-//                         $wc_create_tag = $woocommerce->post('products/tags', $data);
+                        $wc_create_tag = $woocommerce->post('products/tags', $data);
 
-//                       }catch (PDOException $e) {
+                      }catch (PDOException $e) {
 
-//                         $resultHTML .= "Error: " . $e->getMessage();
+                        $resultHTML .= "Error: " . $e->getMessage();
 
-//                       }finally{
+                      }finally{
 
-//                         array_push($tags_array,[
-//                           'id' => $wc_create_tag->id,
-//                         ]);
-//                         array_push($final_tag_names_array, $wc_create_tag->name);
+                        array_push($tags_array,[
+                          'id' => $wc_create_tag->id,
+                        ]);
+                        array_push($final_tag_names_array, $wc_create_tag->name);
 
-//                         $resultHTML .= '<p class="text-center">Tag '.($key + 1).' ('.$single_tag.') created successfully!</p>';
+                        $resultHTML .= '<p class="text-center">Tag '.($key + 1).' ('.$single_tag.') created successfully!</p>';
 
-//                       }
+                      }
 
-//                     }
+                    }
 
-//                   }
+                  }
 
-//                 }
+                }
 
-//               }
-//           // creating the tags ends here
-
-
-//             // attempting to create or update a product
-//             // creating attributes array
-//             $attributes_array = [];
-
-//             if(count($primex_all_colors_array) != 0 ){
-//               array_push($attributes_array,[
-//                 'id'        => array_search("Color", $wc_all_attributes_array),
-//                 'variation' => true,
-//                 'visible'   => true,
-//                 'options'   => $primex_all_colors_array,
-//               ]);
-//             }
-
-//             if(count($primex_all_sizes_array) != 0 ){
-//               array_push($attributes_array,[
-//                 'id'        => array_search("Size", $wc_all_attributes_array),
-//                 'variation' => true,
-//                 'visible'   => true,
-//                 'options'   => $primex_all_sizes_array,
-//               ]);
-//             }
-//             // creating attributes array ends here
+              }
+          // creating the tags ends here
 
 
-//             // creating product's meta data
-//             $product_meta_data_array = [
-//               [
-//                   'key' => 'name',
-//                   'value' => $primex_prod_name,
-//               ],
-//               [
-//                   'key' => 'description',
-//                   'value' => $primex_prod_desc,
-//               ],
-//               [
-//                   'key' => 'short_description',
-//                   'value' => $primex_prod_short_desc,
-//               ],
-//               [
-//                   'key' => 'sku',
-//                   'value' => strval($primex_prod_sku),
-//               ],
-//               [
-//                   'key' => 'category',
-//                   'value' => $primex_cat_name,
-//               ],
-//               [
-//                   'key' => 'sub_category',
-//                   'value' => $primex_sub_cat_name,
-//               ],
-//               [
-//                   'key' => 'brand',
-//                   'value' => $primex_prod_brand,
-//               ],
-//               [
-//                   'key' => 'colors',
-//                   'value' => implode(",", $primex_all_colors_array),
-//               ],
-//               [
-//                   'key' => 'sizes',
-//                   'value' => implode(",", $primex_all_sizes_array),
-//               ],
-//               [
-//                   'key' => 'tags',
-//                   'value' => implode(",", $final_tag_names_array),
-//               ],
-//               [
-//                   'key' => 'composite',
-//                   'value' => $Composite,
-//               ],
-//               [
-//                   'key' => 'country_of_origin',
-//                   'value' => $CountryOfOrigin,
-//               ],
-//               [
-//                   'key' => 'genre',
-//                   'value' => $Genre,
-//               ],
-//               [
-//                   'key' => 'sleeve_style',
-//                   'value' => $SleeveStyle != '' ? $SleeveStyle : 'Fit Sleeve',
-//               ],
-//               [
-//                   'key' => 'version',
-//                   'value' => $Version,
-//               ],
-//               [
-//                   'key' => 'fitting',
-//                   'value' => $Fitting != '' ? $Fitting : 'Fit',
-//               ],
-//               [
-//                   'key' => 'available_sizes',
-//                   'value' => $AvailableSizes,
-//               ],
-//               [
-//                   'key' => 'sub_collection',
-//                   'value' => $SubCollection,
-//               ],
-//               [
-//                   'key' => 'product_key',
-//                   'value' => $ProductKey,
-//               ],
-//               [
-//                   'key' => 'commodity_code',
-//                   'value' => $CommodityCode,
-//               ],
-//             ];
+            // attempting to create or update a product
+            // creating attributes array
+            $attributes_array = [];
+
+            if(count($primex_all_colors_array) != 0 ){
+              array_push($attributes_array,[
+                'id'        => array_search("Color", $wc_all_attributes_array),
+                'variation' => true,
+                'visible'   => true,
+                'options'   => $primex_all_colors_array,
+              ]);
+            }
+
+            if(count($primex_all_sizes_array) != 0 ){
+              array_push($attributes_array,[
+                'id'        => array_search("Size", $wc_all_attributes_array),
+                'variation' => true,
+                'visible'   => true,
+                'options'   => $primex_all_sizes_array,
+              ]);
+            }
+            // creating attributes array ends here
 
 
-//             // if product sku exists or not
-//             $key3 = array_search($primex_prod_sku, $wc_all_prod_array);
+            // creating product's meta data
+            $product_meta_data_array = [
+              [
+                  'key' => 'name',
+                  'value' => $primex_prod_name,
+              ],
+              [
+                  'key' => 'description',
+                  'value' => $primex_prod_desc,
+              ],
+              [
+                  'key' => 'short_description',
+                  'value' => $primex_prod_short_desc,
+              ],
+              [
+                  'key' => 'sku',
+                  'value' => strval($primex_prod_sku),
+              ],
+              [
+                  'key' => 'category',
+                  'value' => $primex_cat_name,
+              ],
+              [
+                  'key' => 'sub_category',
+                  'value' => $primex_sub_cat_name,
+              ],
+              [
+                  'key' => 'brand',
+                  'value' => $primex_prod_brand,
+              ],
+              [
+                  'key' => 'colors',
+                  'value' => implode(",", $primex_all_colors_array),
+              ],
+              [
+                  'key' => 'sizes',
+                  'value' => implode(",", $primex_all_sizes_array),
+              ],
+              [
+                  'key' => 'tags',
+                  'value' => implode(",", $final_tag_names_array),
+              ],
+              [
+                  'key' => 'composite',
+                  'value' => $Composite,
+              ],
+              [
+                  'key' => 'country_of_origin',
+                  'value' => $CountryOfOrigin,
+              ],
+              [
+                  'key' => 'genre',
+                  'value' => $Genre,
+              ],
+              [
+                  'key' => 'sleeve_style',
+                  'value' => $SleeveStyle != '' ? $SleeveStyle : 'Fit Sleeve',
+              ],
+              [
+                  'key' => 'version',
+                  'value' => $Version,
+              ],
+              [
+                  'key' => 'fitting',
+                  'value' => $Fitting != '' ? $Fitting : 'Fit',
+              ],
+              [
+                  'key' => 'available_sizes',
+                  'value' => $AvailableSizes,
+              ],
+              [
+                  'key' => 'sub_collection',
+                  'value' => $SubCollection,
+              ],
+              [
+                  'key' => 'product_key',
+                  'value' => $ProductKey,
+              ],
+              [
+                  'key' => 'commodity_code',
+                  'value' => $CommodityCode,
+              ],
+            ];
 
-//             if ($key3 !== false) {
-//               // get the correct product id
-//               $wc_product_id = $key3;
-//               try {
-//                 // retrieving the product
-//                 $wc_retrieved_product = $woocommerce->get('products/' . strval($wc_product_id));
-//               }catch (PDOException $e) {
-//                 $resultHTML .= "Error: " . $e->getMessage();
-//               }
 
-//               $wc_total_images = count($wc_retrieved_product->images);
-//               $primex_total_images = count($primex_all_image_src_array);
-//               $missed_images_array = [];
+            // if product sku exists or not
+            $key3 = array_search($primex_prod_sku, $wc_all_prod_array);
 
-//               if($wc_total_images == 0){
-//                 $updated_images_array = [];
-//               }else{
-//                 $updated_images_array = $wc_retrieved_product->images;
-//               }
+            if ($key3 !== false) {
+              // get the correct product id
+              $wc_product_id = $key3;
+              try {
+                // retrieving the product
+                $wc_retrieved_product = $woocommerce->get('products/' . strval($wc_product_id));
+              }catch (PDOException $e) {
+                $resultHTML .= "Error: " . $e->getMessage();
+              }
 
-//               if($primex_total_images > $wc_total_images){
-//                   for($i = $wc_total_images; $i < $primex_total_images; $i++){
+              $wc_total_images = count($wc_retrieved_product->images);
+              $primex_total_images = count($primex_all_image_src_array);
+              $missed_images_array = [];
 
-//                     try {
-//                       $image_id = woocommerce_primex_api_custom_image_file_upload( $primex_all_image_src_array[$i]['src'], $primex_all_image_src_array[$i]['name'] );
-//                     }catch (PDOException $e) {
-//                       $resultHTML .= "Error: " . $e->getMessage();
-//                     }finally{
-//                       if(is_int($image_id)){
-//                         array_push($updated_images_array,  [
-//                           'id' => $image_id,
-//                           'name' => $primex_all_image_src_array[$i]['name'],
-//                           'alt' => $primex_all_image_src_array[$i]['alt'],
-//                         ]);
-//                       }else{
-//                         array_push($missed_images_array, $i + 1);
-//                       }
-//                     }
-//                   }
-//               }
+              if($wc_total_images == 0){
+                $updated_images_array = [];
+              }else{
+                $updated_images_array = $wc_retrieved_product->images;
+              }
 
-//               // creating product data
-//               $data = [
-//                 'name' => $primex_prod_name,
-//                 'type' => 'variable',
-//                 'description' => $primex_prod_desc,
-//                 'short_description' => $primex_prod_short_desc,
-//                 'sku' => strval($primex_prod_sku),
-//                 'categories' => [
-//                     [
-//                         'id' => (isset($callBack2->id)) ? $callBack2->id : $key2,
-//                     ],
-//                     [
-//                         'id' => (isset($callBack5->id)) ? $callBack5->id : $key5,
-//                     ],
-//                 ],
-//                 'images' => $updated_images_array,
-//                 'attributes'  => $attributes_array,
-//                 'tags'  => $tags_array,
-//                 'meta_data' =>  $product_meta_data_array
-//               ];
+              if($primex_total_images > $wc_total_images){
+                  for($i = $wc_total_images; $i < $primex_total_images; $i++){
 
-//               try {
+                    try {
+                      $image_id = woocommerce_primex_api_custom_image_file_upload( $primex_all_image_src_array[$i]['src'], $primex_all_image_src_array[$i]['name'] );
+                    }catch (PDOException $e) {
+                      $resultHTML .= "Error: " . $e->getMessage();
+                    }finally{
+                      if(is_int($image_id)){
+                        array_push($updated_images_array,  [
+                          'id' => $image_id,
+                          'name' => $primex_all_image_src_array[$i]['name'],
+                          'alt' => $primex_all_image_src_array[$i]['alt'],
+                        ]);
+                      }else{
+                        array_push($missed_images_array, $i + 1);
+                      }
+                    }
+                  }
+              }
 
-//                 // trying to update a WC product
-//                 $update_wc_prod = $woocommerce->put('products/' . strval($key3), $data);
+              // creating product data
+              $data = [
+                'name' => $primex_prod_name,
+                'type' => 'variable',
+                'description' => $primex_prod_desc,
+                'short_description' => $primex_prod_short_desc,
+                'sku' => strval($primex_prod_sku),
+                'categories' => [
+                    [
+                        'id' => (isset($callBack2->id)) ? $callBack2->id : $key2,
+                    ],
+                    [
+                        'id' => (isset($callBack5->id)) ? $callBack5->id : $key5,
+                    ],
+                ],
+                'images' => $updated_images_array,
+                'attributes'  => $attributes_array,
+                'tags'  => $tags_array,
+                'meta_data' =>  $product_meta_data_array
+              ];
 
-//               }catch (PDOException $e) {
+              try {
 
-//                 $resultHTML .= "Error: " . $e->getMessage();
+                // trying to update a WC product
+                $update_wc_prod = $woocommerce->put('products/' . strval($key3), $data);
 
-//               }finally{
+              }catch (PDOException $e) {
 
-//                 $wc_retrieved_product = $update_wc_prod;
-//                 $product_id = $wc_retrieved_product->id;
-//                 $product_sku = $wc_retrieved_product->sku;
+                $resultHTML .= "Error: " . $e->getMessage();
 
-//                 $resultHTML .= '<p class="text-center">Product ('.$product_id.') => ('.$product_sku.') => ('.$primex_prod_name.') updated successfully!</p>';
+              }finally{
 
-//               }
+                $wc_retrieved_product = $update_wc_prod;
+                $product_id = $wc_retrieved_product->id;
+                $product_sku = $wc_retrieved_product->sku;
 
-//             }else{
+                $resultHTML .= '<p class="text-center">Product ('.$product_id.') => ('.$product_sku.') => ('.$primex_prod_name.') updated successfully!</p>';
 
-//               // initializing
-//               $updated_images_array = [];
-//               $missed_images_array = [];
+              }
 
-//               // adding images
-//               foreach($primex_all_image_src_array as $image_key => $single_primex_image){
-//                 try {
-//                   $image_id = woocommerce_primex_api_custom_image_file_upload( $single_primex_image['src'], $single_primex_image['name'] );
-//                 }catch (PDOException $e) {
-//                   $resultHTML .= "Error: " . $e->getMessage();
-//                 }finally{
-//                   if(is_int($image_id)){
-//                     array_push($updated_images_array,  [
-//                       'id' => $image_id,
-//                       'name' => $single_primex_image['name'],
-//                       'alt' => $single_primex_image['alt'],
-//                     ]);
-//                   }else{
-//                     array_push($missed_images_array, $image_key + 1);
-//                   }
-//                 }
-//               }
+            }else{
 
-//               // creating product data
-//               $data = [
-//                 'name' => $primex_prod_name,
-//                 'type' => 'variable',
-//                 'description' => $primex_prod_desc,
-//                 'short_description' => $primex_prod_short_desc,
-//                 'sku' => strval($primex_prod_sku),
-//                 'categories' => [
-//                     [
-//                         'id' => (isset($callBack2->id)) ? $callBack2->id : $key2,
-//                     ],
-//                     [
-//                         'id' => (isset($callBack5->id)) ? $callBack5->id : $key5,
-//                     ],
-//                 ],
-//                 'images' => $updated_images_array,
-//                 'attributes'  => $attributes_array,
-//                 'tags'  => $tags_array,
-//                 'meta_data' =>  $product_meta_data_array
-//               ];
+              // initializing
+              $updated_images_array = [];
+              $missed_images_array = [];
 
-//               try {
+              // adding images
+              foreach($primex_all_image_src_array as $image_key => $single_primex_image){
+                try {
+                  $image_id = woocommerce_primex_api_custom_image_file_upload( $single_primex_image['src'], $single_primex_image['name'] );
+                }catch (PDOException $e) {
+                  $resultHTML .= "Error: " . $e->getMessage();
+                }finally{
+                  if(is_int($image_id)){
+                    array_push($updated_images_array,  [
+                      'id' => $image_id,
+                      'name' => $single_primex_image['name'],
+                      'alt' => $single_primex_image['alt'],
+                    ]);
+                  }else{
+                    array_push($missed_images_array, $image_key + 1);
+                  }
+                }
+              }
 
-//                 // trying to create a WC product
-//                 $create_wc_prod = $woocommerce->post('products', $data);
+              // creating product data
+              $data = [
+                'name' => $primex_prod_name,
+                'type' => 'variable',
+                'description' => $primex_prod_desc,
+                'short_description' => $primex_prod_short_desc,
+                'sku' => strval($primex_prod_sku),
+                'categories' => [
+                    [
+                        'id' => (isset($callBack2->id)) ? $callBack2->id : $key2,
+                    ],
+                    [
+                        'id' => (isset($callBack5->id)) ? $callBack5->id : $key5,
+                    ],
+                ],
+                'images' => $updated_images_array,
+                'attributes'  => $attributes_array,
+                'tags'  => $tags_array,
+                'meta_data' =>  $product_meta_data_array
+              ];
 
-//               }catch (PDOException $e) {
+              try {
 
-//                 $resultHTML .= "Error: " . $e->getMessage();
+                // trying to create a WC product
+                $create_wc_prod = $woocommerce->post('products', $data);
 
-//               }finally{
+              }catch (PDOException $e) {
 
-//                 // get the correct product id
-//                 $wc_retrieved_product = $create_wc_prod;
-//                 $wc_product_id = $wc_retrieved_product->id;
+                $resultHTML .= "Error: " . $e->getMessage();
 
-//                 //create or update wp-option includes list of product sku for cron 
-//                 $product_id = $wc_retrieved_product->id;
-//                 $product_sku = $wc_retrieved_product->sku;
+              }finally{
 
-//                 if( $product_id != '' && $product_sku != ''){
+                // get the correct product id
+                $wc_retrieved_product = $create_wc_prod;
+                $wc_product_id = $wc_retrieved_product->id;
 
-//                   $resultHTML .= '<p class="text-center">Product ('.$product_id.') => ('.$product_sku.') => ('.$primex_prod_name.') created successfully!</p>';
+                //create or update wp-option includes list of product sku for cron 
+                $product_id = $wc_retrieved_product->id;
+                $product_sku = $wc_retrieved_product->sku;
 
-//                   $primex_cron_list = get_option('primex_cron_list');
+                if( $product_id != '' && $product_sku != ''){
 
-//                   if ( !in_array($product_sku, $primex_cron_list) ){
+                  $resultHTML .= '<p class="text-center">Product ('.$product_id.') => ('.$product_sku.') => ('.$primex_prod_name.') created successfully!</p>';
 
-//                     $primex_cron_list[$product_id] = $product_sku;
+                  $primex_cron_list = get_option('primex_cron_list');
 
-//                     update_option('primex_cron_list', $primex_cron_list);
+                  if ( !in_array($product_sku, $primex_cron_list) ){
+
+                    $primex_cron_list[$product_id] = $product_sku;
+
+                    update_option('primex_cron_list', $primex_cron_list);
     
-//                     $resultHTML .= '<p class="text-center">Product ('.$product_id.') => ('.$product_sku.') => ('.$primex_prod_name.') has been inserted to the cron list successfully!</p>';
+                    $resultHTML .= '<p class="text-center">Product '.$product_id.' => '.$product_sku.' => ('.$primex_prod_name.') has been inserted to the cron list successfully!</p>';
 
-//                   }
+                  }
 
-//                   $primex_products_sku_list = get_option('primex_products_sku_list');
+                  $primex_products_sku_list = get_option('primex_products_sku_list');
 
-//                   if ( !in_array($product_sku, $primex_products_sku_list) ){
+                  if ( !in_array($product_sku, $primex_products_sku_list) ){
 
-//                     $primex_products_sku_list[$product_id] = $product_sku;
+                    $primex_products_sku_list[$product_id] = $product_sku;
 
-//                     update_option('primex_products_sku_list', $primex_products_sku_list);
+                    update_option('primex_products_sku_list', $primex_products_sku_list);
     
-//                     $resultHTML .= '<p class="text-center">Product ('.$product_id.') => ('.$product_sku.') => ('.$primex_prod_name.') has been inserted to the all primex products list successfully!</p>';
+                    $resultHTML .= '<p class="text-center">Product '.$product_id.' => '.$product_sku.' => ('.$primex_prod_name.') has been inserted to the all primex products list successfully!</p>';
 
-//                   }
+                  }
 
-//                   $primex_sku_next_to_update = get_option('primex_sku_next_to_update');
+                  $primex_sku_next_to_update = get_option('primex_sku_next_to_update');
 
-//                   if($primex_sku_next_to_update == ''){
+                  if($primex_sku_next_to_update == ''){
 
-//                     update_option('primex_sku_next_to_update', $product_sku );
+                    update_option('primex_sku_next_to_update', $product_sku );
 
-//                     $resultHTML .= '<p class="text-center">Next to update option was empty</p>';
-//                     $resultHTML .= '<p class="text-center">Product '.$product_id.' => '.$product_sku.' => ('.$primex_prod_name.') has been inserted to the next to update cron successfully!</p>';
+                    $resultHTML .= '<p class="text-center">Next to update option was empty</p>';
+                    $resultHTML .= '<p class="text-center">Product '.$product_id.' => '.$product_sku.' => ('.$primex_prod_name.') has been inserted to the next to update cron successfully!</p>';
 
-//                   }
+                  }
 
-//                 }else{
-//                   $resultHTML .= '<p class="text-center">Product ('.$primex_prod_name.') could not be imported!</p>';
-//                 }
-//               // product not created ends here
+                }else{
+                  $resultHTML .= '<p class="text-center">Product ('.$primex_prod_name.') could not be imported!</p>';
+                }
+              // product not created ends here
 
-//             }
+            }
 
-//           }
-//           // end of if-else
-//           // creating product ends here
+          }
+          // end of if-else
+          // creating product ends here
 
 
-//           // if product exists
-//           if ($wc_product_id != ''){
-//               // getting all WC product variations
-//               $wc_all_product_variations = [];
-//               // initializing
-//               $page = 1;
-//               // infinite loop
-//               while(1 == 1) {
-//                 // initializing for grabbing all products
-//                 $data = [
-//                   'page' => $page,
-//                   'per_page' => 100,
-//                 ];
-//                 try{
-//                   // getting all WC products
-//                   $wc_all_product_variations_temp = $woocommerce->get('products/'.strval($wc_product_id).'/variations', $data);
+          // if product exists
+          if ($wc_product_id != ''){
+              // getting all WC product variations
+              $wc_all_product_variations = [];
+              // initializing
+              $page = 1;
+              // infinite loop
+              while(1 == 1) {
+                // initializing for grabbing all products
+                $data = [
+                  'page' => $page,
+                  'per_page' => 100,
+                ];
+                try{
+                  // getting all WC products
+                  $wc_all_product_variations_temp = $woocommerce->get('products/'.strval($wc_product_id).'/variations', $data);
     
-//                 } catch (PDOException $e) {
+                } catch (PDOException $e) {
     
-//                   $resultHTML .= "Error: " . $e->getMessage();
+                  $resultHTML .= "Error: " . $e->getMessage();
           
-//                 } 
+                } 
     
-//                 $wc_all_product_variations = array_merge($wc_all_product_variations, $wc_all_product_variations_temp);
+                $wc_all_product_variations = array_merge($wc_all_product_variations, $wc_all_product_variations_temp);
     
-//                 if( count($wc_all_product_variations_temp) < 100 ){
-//                   break;
-//                 }
-//                 $page++;
-//               }
-//               // infinite loop ends here
+                if( count($wc_all_product_variations_temp) < 100 ){
+                  break;
+                }
+                $page++;
+              }
+              // infinite loop ends here
 
 
-//               // creating WC variations sku array
-//               $wc_variations_sku_array = [];
+              // creating WC variations sku array
+              $wc_variations_sku_array = [];
 
-//               if($wc_all_product_variations){
+              if($wc_all_product_variations){
 
-//                 if(count($wc_all_product_variations) != 0){
+                if(count($wc_all_product_variations) != 0){
 
-//                   foreach($wc_all_product_variations as $key => $single_variation){
+                  foreach($wc_all_product_variations as $key => $single_variation){
 
-//                     $single_variation_id = $single_variation->id;
-//                     $single_variation_sku = $single_variation->sku;
+                    $single_variation_id = $single_variation->id;
+                    $single_variation_sku = $single_variation->sku;
 
-//                     $wc_variations_sku_array[$single_variation_id] = $single_variation_sku;
+                    $wc_variations_sku_array[$single_variation_id] = $single_variation_sku;
 
-//                   }
+                  }
 
-//                 }
+                }
 
-//               }
+              }
 
 
-//               // initializing
-//               $variations_all_colors_array = [];
-//               $variation_image_id = 0;
+              // initializing
+              $variations_all_colors_array = [];
+              $variation_image_id = 0;
 
-//               foreach($primex_prod_variants as $single_key => $single_variant){
+              foreach($primex_prod_variants as $single_key => $single_variant){
         
-//                 if($single_variant["Available"] == true || $single_variant["OnSale"] == true){
+                if($single_variant["Available"] == true || $single_variant["OnSale"] == true){
 
-//                   // creating variation name and sku
-//                   $single_variant_name = $single_variant["Name"];
-//                   $primex_api_variant_sku = $single_variant["Sku"];
-//                   // creating variant name
-//                   if(!str_contains($single_variant_name, $primex_api_variant_sku) ){
-//                       $single_variant_name = $single_variant_name . ' #' . $primex_api_variant_sku;
-//                   }
+                  // creating variation name and sku
+                  $single_variant_name = $single_variant["Name"];
+                  $primex_api_variant_sku = $single_variant["Sku"];
+                  // creating variant name
+                  if(!str_contains($single_variant_name, $primex_api_variant_sku) ){
+                      $single_variant_name = $single_variant_name . ' #' . $primex_api_variant_sku;
+                  }
 
-//                   // creating attributes array
-//                   $variation_attributes_array = [];
+                  // creating attributes array
+                  $variation_attributes_array = [];
 
-//                   if($single_variant["Color"] != '' ){
+                  if($single_variant["Color"] != '' ){
 
-//                     array_push($variation_attributes_array,[
-//                       'id' => array_search("Color", $wc_all_attributes_array),
-//                       'option' => $single_variant["Color"],
-//                     ]);
+                    array_push($variation_attributes_array,[
+                      'id' => array_search("Color", $wc_all_attributes_array),
+                      'option' => $single_variant["Color"],
+                    ]);
 
-//                   }
+                  }
 
-//                   if($single_variant["Size"] != '' ){
+                  if($single_variant["Size"] != '' ){
 
-//                     array_push($variation_attributes_array,[
-//                       'id' => array_search("Size", $wc_all_attributes_array),
-//                       'option' => $single_variant["Size"],
-//                     ]);
+                    array_push($variation_attributes_array,[
+                      'id' => array_search("Size", $wc_all_attributes_array),
+                      'option' => $single_variant["Size"],
+                    ]);
 
-//                   }
+                  }
 
-//                   try {
+                  try {
                     
-//                     // sending single product API request to Primex
-//                     $primex_api_variant_stock = $ApiQuery->primex_api_variant_stock($primex_api_variant_sku, $primex_api_base_url, $primex_api_key);
+                    // sending single product API request to Primex
+                    $primex_api_variant_stock = $ApiQuery->primex_api_variant_stock($primex_api_variant_sku, $primex_api_base_url, $primex_api_key);
 
-//                   } catch (PDOException $e) {
+                  } catch (PDOException $e) {
             
-//                     $resultHTML .= "Error: " . $e->getMessage();
+                    $resultHTML .= "Error: " . $e->getMessage();
             
-//                   }finally{
+                  }finally{
 
-//                     $primex_api_variant_stock = json_decode($primex_api_variant_stock, true);
+                    $primex_api_variant_stock = json_decode($primex_api_variant_stock, true);
 
-//                     //initializing
-//                     $primex_api_stock_quantity = 0;
+                    //initializing
+                    $primex_api_stock_quantity = 0;
 
-//                     // assigning
-//                     $PrimexStock = $primex_api_variant_stock["stockItems"][0]["Variants"][0]["PrimexStock"];
-//                     $SupplierStock = $primex_api_variant_stock["stockItems"][0]["Variants"][0]["SupplierStock"];
+                    // assigning
+                    $PrimexStock = $primex_api_variant_stock["stockItems"][0]["Variants"][0]["PrimexStock"];
+                    $SupplierStock = $primex_api_variant_stock["stockItems"][0]["Variants"][0]["SupplierStock"];
 
-//                     if($PrimexStock > $SupplierStock){
-//                       $primex_api_stock_quantity = $PrimexStock;
-//                     }else{
-//                       $primex_api_stock_quantity = $SupplierStock;
-//                     }
+                    if($PrimexStock > $SupplierStock){
+                      $primex_api_stock_quantity = $PrimexStock;
+                    }else{
+                      $primex_api_stock_quantity = $SupplierStock;
+                    }
 
-//                     if($single_variant["Color"] != '' && !in_array($single_variant["Color"], $variations_all_colors_array)){
-//                       array_push($variations_all_colors_array, $single_variant["Color"]);
-//                       // increament
-//                       if (!in_array($variation_image_id + 1, $missed_images_array)){
-//                         $variation_image_id++;
-//                       }
-//                     }
+                    if($single_variant["Color"] != '' && !in_array($single_variant["Color"], $variations_all_colors_array)){
+                      array_push($variations_all_colors_array, $single_variant["Color"]);
+                      // increament
+                      if (!in_array($variation_image_id + 1, $missed_images_array)){
+                        $variation_image_id++;
+                      }
+                    }
 
-//                     // variant price
-//                     $variant_price = strval(round((floatval($woocommerce_api_mul_val) * floatval($single_variant["CustomerPrice"])), 2));
+                    // variant price
+                    $variant_price = strval(round((floatval($woocommerce_api_mul_val) * floatval($single_variant["CustomerPrice"])), 2));
 
-//                     // creating variation data
-//                     $variation_meta_data = [
-//                       [
-//                           'key' => 'name',
-//                           'value' => $primex_prod_name,
-//                       ],
-//                       [
-//                           'key' => 'price',
-//                           'value' => $variant_price,
-//                       ],
-//                       [
-//                           'key' => 'description',
-//                           'value' => $single_variant_name,
-//                       ],
-//                       [
-//                           'key' => 'short_description',
-//                           'value' => $primex_prod_short_desc,
-//                       ],
-//                       [
-//                           'key' => 'sku',
-//                           'value' => strval($primex_api_variant_sku),
-//                       ],
-//                       [
-//                           'key' => 'category',
-//                           'value' => $primex_cat_name,
-//                       ],
-//                       [
-//                           'key' => 'sub_category',
-//                           'value' => $primex_sub_cat_name,
-//                       ],
-//                       [
-//                           'key' => 'brand',
-//                           'value' => $single_variant["Brand"],
-//                       ],
-//                       [
-//                           'key' => 'color',
-//                           'value' => $single_variant["Color"],
-//                       ],
-//                       [
-//                           'key' => 'size',
-//                           'value' => $single_variant["Size"],
-//                       ],
-//                       [
-//                           'key' => 'weight',
-//                           'value' => $single_variant["Weight"],
-//                       ],
-//                       [
-//                           'key' => 'rgb',
-//                           'value' => $single_variant["Rgb"],
-//                       ],
-//                       [
-//                           'key' => 'hex',
-//                           'value' => $single_variant["Hex"],
-//                       ],
-//                       [
-//                           'key' => 'body_length_width',
-//                           'value' => $single_variant["BodyLengthWidth"],
-//                       ],
-//                       [
-//                           'key' => 'tags',
-//                           'value' => implode(",", $final_tag_names_array),
-//                       ],
-//                       [
-//                           'key' => 'composite',
-//                           'value' => $Composite,
-//                       ],
-//                       [
-//                           'key' => 'country_of_origin',
-//                           'value' => $CountryOfOrigin,
-//                       ],
-//                       [
-//                           'key' => 'genre',
-//                           'value' => $Genre,
-//                       ],
-//                       [
-//                           'key' => 'sleeve_style',
-//                           'value' => $SleeveStyle != '' ? $SleeveStyle : 'Fit Sleeve',
-//                       ],
-//                       [
-//                           'key' => 'version',
-//                           'value' => $Version,
-//                       ],
-//                       [
-//                           'key' => 'fitting',
-//                           'value' => $Fitting != '' ? $Fitting : 'Fit',
-//                       ],
-//                       [
-//                           'key' => 'available_sizes',
-//                           'value' => $AvailableSizes,
-//                       ],
-//                       [
-//                           'key' => 'sub_collection',
-//                           'value' => $SubCollection,
-//                       ],
-//                       [
-//                           'key' => 'product_key',
-//                           'value' => $single_variant["ProductKey"],
-//                       ],
-//                       [
-//                           'key' => 'commodity_code',
-//                           'value' => $CommodityCode,
-//                       ],
-//                     ];
+                    // creating variation data
+                    $variation_meta_data = [
+                      [
+                          'key' => 'name',
+                          'value' => $primex_prod_name,
+                      ],
+                      [
+                          'key' => 'price',
+                          'value' => $variant_price,
+                      ],
+                      [
+                          'key' => 'description',
+                          'value' => $single_variant_name,
+                      ],
+                      [
+                          'key' => 'short_description',
+                          'value' => $primex_prod_short_desc,
+                      ],
+                      [
+                          'key' => 'sku',
+                          'value' => strval($primex_api_variant_sku),
+                      ],
+                      [
+                          'key' => 'category',
+                          'value' => $primex_cat_name,
+                      ],
+                      [
+                          'key' => 'sub_category',
+                          'value' => $primex_sub_cat_name,
+                      ],
+                      [
+                          'key' => 'brand',
+                          'value' => $single_variant["Brand"],
+                      ],
+                      [
+                          'key' => 'color',
+                          'value' => $single_variant["Color"],
+                      ],
+                      [
+                          'key' => 'size',
+                          'value' => $single_variant["Size"],
+                      ],
+                      [
+                          'key' => 'weight',
+                          'value' => $single_variant["Weight"],
+                      ],
+                      [
+                          'key' => 'rgb',
+                          'value' => $single_variant["Rgb"],
+                      ],
+                      [
+                          'key' => 'hex',
+                          'value' => $single_variant["Hex"],
+                      ],
+                      [
+                          'key' => 'body_length_width',
+                          'value' => $single_variant["BodyLengthWidth"],
+                      ],
+                      [
+                          'key' => 'tags',
+                          'value' => implode(",", $final_tag_names_array),
+                      ],
+                      [
+                          'key' => 'composite',
+                          'value' => $Composite,
+                      ],
+                      [
+                          'key' => 'country_of_origin',
+                          'value' => $CountryOfOrigin,
+                      ],
+                      [
+                          'key' => 'genre',
+                          'value' => $Genre,
+                      ],
+                      [
+                          'key' => 'sleeve_style',
+                          'value' => $SleeveStyle != '' ? $SleeveStyle : 'Fit Sleeve',
+                      ],
+                      [
+                          'key' => 'version',
+                          'value' => $Version,
+                      ],
+                      [
+                          'key' => 'fitting',
+                          'value' => $Fitting != '' ? $Fitting : 'Fit',
+                      ],
+                      [
+                          'key' => 'available_sizes',
+                          'value' => $AvailableSizes,
+                      ],
+                      [
+                          'key' => 'sub_collection',
+                          'value' => $SubCollection,
+                      ],
+                      [
+                          'key' => 'product_key',
+                          'value' => $single_variant["ProductKey"],
+                      ],
+                      [
+                          'key' => 'commodity_code',
+                          'value' => $CommodityCode,
+                      ],
+                    ];
 
-//                     // creating variation data
-//                     $data = [
-//                       'regular_price' => $variant_price,
-//                       'description' => $single_variant_name,
-//                       'sku' => strval($primex_api_variant_sku),
-//                       'image' => [
-//                         'id' => $wc_retrieved_product->images[$variation_image_id]->id,
-//                       ],
-//                       'attributes' => $variation_attributes_array,
-//                       'manage_stock' => true,
-//                       'stock_quantity' => $primex_api_stock_quantity,
-//                       'meta_data' => $variation_meta_data
-//                     ];
+                    // creating variation data
+                    $data = [
+                      'regular_price' => $variant_price,
+                      'description' => $single_variant_name,
+                      'sku' => strval($primex_api_variant_sku),
+                      'image' => [
+                        'id' => $wc_retrieved_product->images[$variation_image_id]->id,
+                      ],
+                      'attributes' => $variation_attributes_array,
+                      'manage_stock' => true,
+                      'stock_quantity' => $primex_api_stock_quantity,
+                      'meta_data' => $variation_meta_data
+                    ];
 
-//                     // if variation sku exists or not
-//                   $key4 = array_search($primex_api_variant_sku, $wc_variations_sku_array);
+                    // if variation sku exists or not
+                  $key4 = array_search($primex_api_variant_sku, $wc_variations_sku_array);
 
-//                   if ($key4 !== false) {
+                  if ($key4 !== false) {
 
-//                     try {
+                    try {
 
-//                       // updating a variant
-//                       $wc_create_or_update_variant = $woocommerce->put('products/'.$wc_product_id.'/variations/' . strval($key4), $data);
+                      // updating a variant
+                      $wc_create_or_update_variant = $woocommerce->put('products/'.$wc_product_id.'/variations/' . strval($key4), $data);
 
-//                     } catch (PDOException $e) {
+                    } catch (PDOException $e) {
               
-//                       $resultHTML .= "Error: " . $e->getMessage();
+                      $resultHTML .= "Error: " . $e->getMessage();
               
-//                     }finally{
+                    }finally{
 
-//                       $resultHTML .= '<p class="text-center">Variant '.($single_key + 1).' ('.$single_variant_name.') updated successfully!</p>';
+                      $resultHTML .= '<p class="text-center">Variant '.($single_key + 1).' ('.$single_variant_name.') updated successfully!</p>';
 
-//                     }
+                    }
 
 
-//                   }else{
+                  }else{
 
-//                     try {
+                    try {
 
-//                       // creating a variant
-//                       $wc_create_or_update_variant = $woocommerce->post('products/'.$wc_product_id.'/variations', $data);
+                      // creating a variant
+                      $wc_create_or_update_variant = $woocommerce->post('products/'.$wc_product_id.'/variations', $data);
 
-//                     } catch (PDOException $e) {
+                    } catch (PDOException $e) {
               
-//                       $resultHTML .= "Error: " . $e->getMessage();
+                      $resultHTML .= "Error: " . $e->getMessage();
               
-//                     }finally{
+                    }finally{
 
-//                       $resultHTML .= '<p class="text-center">Variant '.($single_key + 1).' ('.$single_variant_name.') created successfully!</p>';
+                      $resultHTML .= '<p class="text-center">Variant '.($single_key + 1).' ('.$single_variant_name.') created successfully!</p>';
 
-//                     }
+                    }
 
-//                   }
+                  }
 
-//                 }
+                }
 
-//               }
+              }
 
-//             }
-//             // end of foreach
+            }
+            // end of foreach
 
-//     }else{
-//       $resultHTML .= '<p class="text-center">Got no product for importing the variations!</p>';
-//     }
+    }else{
+      $resultHTML .= '<p class="text-center">Got no product for importing the variations!</p>';
+    }
 
-//     }else{
-//       $resultHTML .= '<p class="text-center">Got no results from Primex!</p>';
-//     }
+    }else{
+      $resultHTML .= '<p class="text-center">Got no results from Primex!</p>';
+    }
 
-    // }
+    }
     // try catch ends here 
 
-  // echo $resultHTML;
+  echo $resultHTML;
 
 
   }  // if posted certain values ends

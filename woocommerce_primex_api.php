@@ -16,10 +16,6 @@
 if( !defined('ABSPATH') ) : exit(); endif;
 
 
-// if no woocommerce
-if ( ! in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) return;
-
-
 // Define plugin constants 
 define( 'WOOCOMMERCE_PRIMEX_API_PLUGIN_PATH', trailingslashit( plugin_dir_path(__FILE__) ) );
 define( 'WOOCOMMERCE_PRIMEX_API_PLUGIN_URL', trailingslashit( plugins_url('/', __FILE__) ) );
@@ -41,22 +37,8 @@ function primex_secure_input($data) {
 }
 
 
-// credentials encrypt-decrypt
-require_once WOOCOMMERCE_PRIMEX_API_PLUGIN_PATH . 'inc/password-encrypt-decrypt/password-encrypt-decrypt.php';
-
-
 // admin or not
 if( is_admin() ) {
-    // adding settings link into plugin list page
-    add_filter( 'plugin_action_links_' . plugin_basename(__FILE__), 'primex_settings_link' );
-    function primex_settings_link( array $links ) {
-        $settings_url = get_admin_url() . "admin.php?page=woocommerce_primex_api_settings_page";
-        $settings_link = '<a href="' . $settings_url . '" aria-label="' . __('View Primex API Settings', 'WoocommercePrimexApi') . ' ">' . __('Settings', 'WoocommercePrimexApi') . '</a>';
-        $action_links = array(
-            'settings' => $settings_link,
-        );
-        return array_merge( $action_links, $links );
-    }
     // admin settings page
     require_once WOOCOMMERCE_PRIMEX_API_PLUGIN_PATH . '/inc/settings/settings.php';
     //  add shortcodes 
@@ -196,7 +178,7 @@ function primex_order( $order_id ) {
             // assigning values got from wp options
             $primex_api_base_url = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_primex_api_base_url');
             $primex_customer_id = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_primex_customer_id');
-            $primex_api_key = primex_decrypt_password(get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_primex_api_key'));
+            $primex_api_key = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_primex_api_key');
 
             // Customer billing information details
             $billing_first_name = $order->get_billing_first_name();
@@ -208,13 +190,12 @@ function primex_order( $order_id ) {
             $billing_state      = $order->get_billing_state();
             $billing_postcode   = $order->get_billing_postcode();
             $billing_country    = $order->get_billing_country();
-            $customer_id = $order->get_customer_id();
 
             $billing_full_name = $billing_first_name . ' ' . $billing_last_name;
             $billing_address = $billing_address_1 . ', ' . $billing_address_2;
 
             // for putting on primex order api
-            $Reference = parse_url(site_url(), PHP_URL_HOST) . ' - ' . $order_id . ' - ' . $billing_first_name . ' - ' . $customer_id;
+            $Reference = parse_url(site_url(), PHP_URL_HOST) . ' - ' . $order_id . ' - ' . $billing_first_name;
 
             // Primex API Queries
             require_once( WOOCOMMERCE_PRIMEX_API_PLUGIN_PATH . 'inc/shortcodes/includes/PrimexApiQueries.php');
