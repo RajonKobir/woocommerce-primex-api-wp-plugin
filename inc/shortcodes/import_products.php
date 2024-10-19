@@ -70,7 +70,7 @@ function importPrimexProducts($attr) {
 
     <div class='form-group'>
         <label for='validationCustom01' class='form-label'>".$args['form_name_input_label']."</label>
-        <input name='woocommerce_primex_api_product_sku_field' id='woocommerce_primex_api_product_sku_field' minlength='5' maxlength='50' type='text' class='form-control' id='validationCustom01' value='' required>
+        <input name='woocommerce_primex_api_product_sku_field' id='woocommerce_primex_api_product_sku_field' minlength='1' maxlength='50' type='text' class='form-control' id='validationCustom01' value='' required>
         <div class='valid-feedback'>
         Perfect!
         </div>

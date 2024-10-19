@@ -17,6 +17,9 @@ $primex_customer_id = '';
 $primex_api_key = '';
 $primex_api_language = '';
 $wc_prod_tags = '';
+
+$variant_price = 0;
+
 $resultHTML = '';
 
 // get option value
@@ -52,15 +55,33 @@ if( $primex_cron_list ){
             if( $primex_sku_next_to_update != ''){
 
             // assigning values got from wp options
-            $website_url = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_website_url');
-            $woocommerce_api_consumer_key = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_woocommerce_api_consumer_key');
-            $woocommerce_api_consumer_secret = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_woocommerce_api_consumer_secret');
-            $woocommerce_api_mul_val = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_woocommerce_api_mul_val');
-            $primex_api_base_url = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_primex_api_base_url');
-            $primex_customer_id = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_primex_customer_id');
-            $primex_api_key = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_primex_api_key');
-            $primex_api_language = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_primex_api_language');
-            $wc_prod_tags = primex_secure_input(get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_wc_prod_tags'));
+            if(get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_website_url')){
+                $website_url = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_website_url');
+            }
+            if(get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_woocommerce_api_consumer_key')){
+                $woocommerce_api_consumer_key = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_woocommerce_api_consumer_key');
+            }
+            if(get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_woocommerce_api_consumer_secret')){
+                $woocommerce_api_consumer_secret = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_woocommerce_api_consumer_secret');
+            }
+            if(get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_woocommerce_api_mul_val')){
+                $woocommerce_api_mul_val = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_woocommerce_api_mul_val');
+            }
+            if(get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_primex_api_base_url')){
+                $primex_api_base_url = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_primex_api_base_url');
+            }
+            if(get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_primex_customer_id')){
+                $primex_customer_id = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_primex_customer_id');
+            }
+            if(get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_primex_api_key')){
+                $primex_api_key = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_primex_api_key');
+            }
+            if(get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_primex_api_language')){
+                $primex_api_language = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_primex_api_language');
+            }
+            if(get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_wc_prod_tags')){
+                $wc_prod_tags = primex_secure_input(get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_wc_prod_tags'));
+            }
 
             // WC Rest API SDK instantiating
             $woocommerce = new Client(
@@ -608,7 +629,7 @@ if( $primex_cron_list ){
                         for($i = $wc_total_images; $i < $primex_total_images; $i++){
       
                           try {
-                            $image_id = woocommerce_primex_api_custom_image_file_upload( $primex_all_image_src_array[$i]['src'], $primex_all_image_src_array[$i]['name'] );
+                            $image_id = woocommerce_primex_api_custom_image_file_upload( $primex_all_image_src_array[$i]['src'], $primex_all_image_src_array[$i]['name'], $wc_product_id );
                           }catch (PDOException $e) {
                             $resultHTML .= "Error: " . $e->getMessage();
                           }finally{
@@ -854,7 +875,9 @@ if( $primex_cron_list ){
                             }
 
                             // variant price
-                            $variant_price = strval(round((floatval($woocommerce_api_mul_val) * floatval($single_variant["CustomerPrice"])), 2));
+                            if(isset($single_variant["CustomerPrice"])){
+                                $variant_price = round((floatval($woocommerce_api_mul_val) * floatval($single_variant["CustomerPrice"])), 2);
+                            }
 
                             $variation_meta_data = [
                                 [
@@ -863,7 +886,7 @@ if( $primex_cron_list ){
                                 ],
                                 [
                                     'key' => 'price',
-                                    'value' => $variant_price,
+                                    'value' => strval($variant_price),
                                 ],
                                 [
                                     'key' => 'description',
@@ -953,7 +976,7 @@ if( $primex_cron_list ){
 
                             // creating variation data
                             $data = [
-                                'regular_price' => $variant_price,
+                                'regular_price' => strval($variant_price),
                                 'description' => $single_variant_name,
                                 'sku' => strval($primex_api_variant_sku),
                                 'image' => [

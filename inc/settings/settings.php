@@ -749,6 +749,57 @@ function woocommerce_primex_api_import_template_callback() {
 
     <div class="wrap">
         <h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
+
+        <div class="row mt-3">
+
+            <div class="col-md-2">
+                <div class="">
+                    <label for="primex_api_page_number" class="form-label">Page Number*</label>
+                    <select class="form-control" id="primex_api_page_number" name="primex_api_page_number" required>
+                    <?php 
+                        for($i=1; $i<=20; $i++){
+                            echo '<option value="'.$i.'" >'.$i.'</option>';
+                        }
+                    ?>
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="">
+                    <label for="primex_api_items_per_page" class="form-label">Items Per Page*</label>
+                    <input type="number" step="1" min="1" max="200" class="form-control" id="primex_api_items_per_page" name="primex_api_items_per_page" placeholder="Min 1 - Max 200 (Default is 200)" required>
+                </div>
+            </div>
+
+            <?php
+                // grabbing brands
+                $brands = file_get_contents( WOOCOMMERCE_PRIMEX_API_PLUGIN_PATH . 'inc/settings/brands.json' );
+                $brands = json_decode($brands, true);
+                $brands = $brands["brands"];
+            ?>
+
+            <div class="col-md-4">
+                <label for="primex_filter_brands" class="form-label">Filter Brands (Separate Multiple Values By Commas)</label>
+                <input type="text" id="primex_filter_brands" name="primex_filter_brands" class="form-control" list="primex_brands_list" placeholder="Default is Null - Double click to view example list" value="">
+                <datalist id="primex_brands_list">
+                    <?php
+                        foreach($brands as $brand_key => $single_brand){
+                            echo '<option value="'.$single_brand.'">';
+                        }
+                    ?>
+                </datalist>
+            </div>
+
+            <div class="col-md-3">
+                <div class="">
+                    <button type="submit" id="primex_api_sku_list" class="btn btn-primary mt-4">Show SKU List</button>
+                </div>
+            </div>
+
+        </div>
+
+
         <div class="row">
             <div class="col-md-12">
                 <div class="mt-5">
@@ -760,9 +811,41 @@ function woocommerce_primex_api_import_template_callback() {
         </div>
     </div>
 
+    <script>
+
+    $( document ).ready(function() {
+        $("#primex_api_sku_list").click(function(){
+            $("#primex_api_sku_list").attr("disabled", true);
+            $("#woocommerce_primex_api_submit_button").attr("disabled", true);
+            let woocommerce_primex_api_submit_button = $("#woocommerce_primex_api_submit_button").html();
+            $("#primex_api_sku_list").html("Please wait...");
+            $("#woocommerce_primex_api_submit_button").html("Please wait...");
+            let primex_api_page_number = $("#primex_api_page_number").val();
+            let primex_api_items_per_page = $("#primex_api_items_per_page").val();
+            let primex_filter_brands = $("#primex_filter_brands").val();
+            let post_url = "<?php echo WOOCOMMERCE_PRIMEX_API_PLUGIN_URL . 'inc/shortcodes/includes/post.php'; ?>";
+            $.ajax({
+                type: "POST",
+                url: post_url,
+                data: {primex_api_page_number, primex_api_items_per_page, primex_filter_brands}, 
+                success: function(result){
+                    $("#primex_api_sku_list").attr("disabled", false);
+                    $("#woocommerce_primex_api_submit_button").attr("disabled", false);
+                    $("#primex_api_sku_list").html("Show SKU List");
+                    $("#woocommerce_primex_api_submit_button").html(woocommerce_primex_api_submit_button);
+                    $("#result").html(result);
+                }
+            });
+        });
+    });
+
+    </script>
+
+
     <?php
 
 }
+// Submenu page 2 ends here
 
 
 
@@ -843,3 +926,4 @@ if( $primex_cron_list != '' && count($primex_cron_list) > 0 ){
 }
 
 }
+// Submenu page 3 ends here

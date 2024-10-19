@@ -10,6 +10,61 @@ if( !defined('ABSPATH') ) : exit(); endif;
 class PrimexApiQueries
 {
 
+    // grab sku list from primex
+    public function primex_api_sku_list($primex_api_page_number, $primex_api_items_per_page, $primex_api_base_url, $primex_customer_id, $primex_api_key, $primex_api_language)
+    {
+
+      // initializing
+      $result = '';
+
+      try {
+
+        // connecting to the API
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+          CURLOPT_URL => $primex_api_base_url . 'product',
+          CURLOPT_RETURNTRANSFER => true,
+          CURLOPT_ENCODING => '',
+          CURLOPT_MAXREDIRS => 10,
+          CURLOPT_TIMEOUT => 0,
+          CURLOPT_FOLLOWLOCATION => true,
+          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+          CURLOPT_CUSTOMREQUEST => 'POST',
+          CURLOPT_POSTFIELDS =>'{
+            "CustomerId": "'.$primex_customer_id.'",
+            "GetCustomerPrice":1,
+            "Languages": "'.$primex_api_language.'",
+            "Page": '.$primex_api_page_number.',
+            "ItemsPerPage": '.$primex_api_items_per_page.'
+        }',
+          CURLOPT_HTTPHEADER => array(
+            'ApiKey: ' . $primex_api_key,
+            'Type: JSON',
+            'Content-Type: application/json'
+          ),
+        ));
+        
+        $result = curl_exec($curl);
+
+        if (curl_errno ( $curl )) {
+          $result = 'Curl error: ' . curl_error ( $curl );
+        }
+        
+        curl_close($curl);
+
+      } catch (PDOException $e) {
+
+          $result = "Error: " . $e->getMessage();
+
+      }
+
+      return $result;
+
+    }
+    // grab sku list from primex ends here 
+
+
     // grabs single product info from primex
     public function primex_api_single_product($primex_api_product_sku, $primex_api_base_url, $primex_customer_id, $primex_api_key, $primex_api_language)
     {
@@ -198,7 +253,7 @@ class PrimexApiQueries
 
         $open_ai = new OpenAi($open_ai_api_key);
 
-        $response = $open_ai->completion([
+        $result = $open_ai->completion([
             'model' => $open_ai_model,
             'prompt' => $open_ai_prompt,
             'temperature' => $open_ai_temperature,
@@ -207,22 +262,11 @@ class PrimexApiQueries
             'presence_penalty' => $open_ai_presence_penalty,
         ]);
 
-    } catch (PDOException $e) {
+      } catch (PDOException $e) {
 
-        $response = "Error: " . $e->getMessage();
+          $result = "Error: " . $e->getMessage();
 
-    }finally{
-
-      $response = json_decode($response, true);
-
-      // if no error
-      if(!isset($response['error'])){
-        if(isset($response["choices"][0]["text"])){
-          $result = $response["choices"][0]["text"];
-        }
       }
-
-    }
 
       return $result;
 

@@ -37,29 +37,66 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $custom_tags_on_off = '';
     $open_ai_on_off = '';
 
+    $variant_price = 0;
+
     $resultHTML = '';
 
     // assigning values got from wp options
-    $website_url = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_website_url');
-    $woocommerce_api_consumer_key = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_woocommerce_api_consumer_key');
-    $woocommerce_api_consumer_secret = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_woocommerce_api_consumer_secret');
-    $woocommerce_api_mul_val = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_woocommerce_api_mul_val');
-    $primex_api_base_url = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_primex_api_base_url');
-    $primex_customer_id = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_primex_customer_id');
-    $primex_api_key = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_primex_api_key');
-    $primex_api_language = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_primex_api_language');
-    $wc_prod_tags = primex_secure_input(get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_wc_prod_tags'));
+    if(get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_website_url')){
+      $website_url = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_website_url');
+    }
+    if(get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_woocommerce_api_consumer_key')){
+      $woocommerce_api_consumer_key = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_woocommerce_api_consumer_key');
+    }
+    if(get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_woocommerce_api_consumer_secret')){
+      $woocommerce_api_consumer_secret = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_woocommerce_api_consumer_secret');
+    }
+    if(get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_woocommerce_api_mul_val')){
+      $woocommerce_api_mul_val = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_woocommerce_api_mul_val');
+    }
+    if(get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_primex_api_base_url')){
+      $primex_api_base_url = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_primex_api_base_url');
+    }
+    if(get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_primex_customer_id')){
+      $primex_customer_id = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_primex_customer_id');
+    }
+    if(get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_primex_api_key')){
+      $primex_api_key = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_primex_api_key');
+    }
+    if(get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_primex_api_language')){
+      $primex_api_language = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_primex_api_language');
+    }
+    if(get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_wc_prod_tags')){
+      $wc_prod_tags = primex_secure_input(get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_wc_prod_tags'));
+    }
+
 
     // open ai option values
-    $open_ai_api_key = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_open_ai_api_key');
-    $open_ai_model = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_open_ai_model');
-    $open_ai_temperature = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_open_ai_temperature');
-    $open_ai_max_tokens = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_open_ai_max_tokens');
-    $open_ai_frequency_penalty = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_open_ai_frequency_penalty');
-    $open_ai_presence_penalty = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_open_ai_presence_penalty');
+    if(get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_open_ai_api_key')){
+      $open_ai_api_key = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_open_ai_api_key');
+    }
+    if(get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_open_ai_model')){
+      $open_ai_model = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_open_ai_model');
+    }
+    if(get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_open_ai_temperature')){
+      $open_ai_temperature = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_open_ai_temperature');
+    }
+    if(get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_open_ai_max_tokens')){
+      $open_ai_max_tokens = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_open_ai_max_tokens');
+    }
+    if(get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_open_ai_frequency_penalty')){
+      $open_ai_frequency_penalty = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_open_ai_frequency_penalty');
+    }
+    if(get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_open_ai_presence_penalty')){
+      $open_ai_presence_penalty = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_open_ai_presence_penalty');
+    }
+    if(get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_custom_tags_on_off')){
+      $custom_tags_on_off = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_custom_tags_on_off');
+    }
+    if(get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_open_ai_on_off')){
+      $open_ai_on_off = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_open_ai_on_off');
+    }
 
-    $custom_tags_on_off = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_custom_tags_on_off');
-    $open_ai_on_off = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_open_ai_on_off');
 
     // assigning language
     $language_full_name = "";
@@ -106,6 +143,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // assigning some useful values got from Primex API response
         $primex_api_single_product = json_decode($primex_api_single_product, true);
+
+      }
+      // try catch ends here 
 
         // if a valid response
         if(isset($primex_api_single_product["Master"][0]["Variants"])){
@@ -240,21 +280,32 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                   array_push($primex_all_colors_array, $single_variant["Color"]);
 
                   // creating product images array
-                  if(isset($single_variant["Images"]["Items"][0])){
+                  if(isset($single_variant["Images"]["Items"])){
 
-                    if($single_variant["Images"]["Items"][0] != ''){
-
+                    // initializing
+                    $temp_array = [];
+                    
+                    // if product images
+                    if( count( $single_variant["Images"]["Items"] ) > 0 ){
                       $temp_array = [
                         'src' => $single_variant["Images"]["Items"][0],
                         'name' => $single_variant_name,
                         'alt' => $single_variant_name,
                       ];
-              
-                      array_push($primex_all_image_src_array,  $temp_array);
 
+                    // if no product images
+                    }else{
+                      $temp_array = [
+                        'src' => $primex_prod_img,
+                        'name' => $primex_prod_name,
+                        'alt' => $primex_prod_name,
+                      ];
                     }
 
+                    array_push($primex_all_image_src_array,  $temp_array);
+
                   }
+
 
                 }
 
@@ -283,11 +334,18 @@ if($open_ai_api_key && $open_ai_api_key != ''){
     } catch (PDOException $e) {
       $resultHTML .= "Error: " . $e->getMessage();
     }finally{
-      if($open_ai_request_response != ''){
-        $primex_prod_desc = str_replace('"', '', $open_ai_request_response);
-        $resultHTML .= '<p class="text-center">OpenAI API has updated the product description...</p>';
-      }else{
+      $open_ai_request_response = json_decode($open_ai_request_response, true);
+      if(isset($open_ai_request_response['error'])){
         $resultHTML .= '<p class="text-center">OpenAI API could not update the product description...</p>';
+        $resultHTML .= '<p class="text-center">OpenAI API Error: '.$open_ai_request_response['error']["type"].' - '.$open_ai_request_response['error']["message"].'</p>';
+      }else{
+        if(isset($open_ai_request_response["choices"][0]["text"])){
+          $resultText = $open_ai_request_response["choices"][0]["text"];
+          $primex_prod_desc = str_replace('"', '', $resultText);
+          $resultHTML .= '<p class="text-center">OpenAI API has updated the product description...</p>';
+        }else{
+          $resultHTML .= '<p class="text-center">Unknown OpenAI API Error occured on updating the product description. Please contact the developer.</p>';
+        }
       }
     }
 
@@ -299,11 +357,18 @@ if($open_ai_api_key && $open_ai_api_key != ''){
     } catch (PDOException $e) {
       $resultHTML .= "Error: " . $e->getMessage();
     }finally{
-      if($open_ai_request_response != ''){
-        $primex_prod_short_desc = str_replace('"', '', $open_ai_request_response);
-        $resultHTML .= '<p class="text-center">OpenAI API has updated the product short-description...</p>';
-      }else{
+      $open_ai_request_response = json_decode($open_ai_request_response, true);
+      if(isset($open_ai_request_response['error'])){
         $resultHTML .= '<p class="text-center">OpenAI API could not update the product short-description...</p>';
+        $resultHTML .= '<p class="text-center">OpenAI API Error: '.$open_ai_request_response['error']["type"].' - '.$open_ai_request_response['error']["message"].'</p>';
+      }else{
+        if(isset($open_ai_request_response["choices"][0]["text"])){
+          $resultText = $open_ai_request_response["choices"][0]["text"];
+          $primex_prod_short_desc = str_replace('"', '', $resultText);
+          $resultHTML .= '<p class="text-center">OpenAI API has updated the product short-description...</p>';
+        }else{
+          $resultHTML .= '<p class="text-center">Unknown OpenAI API Error occured on updating the product short-description. Please contact the developer.</p>';
+        }
       }
     }
 
@@ -316,11 +381,18 @@ if($open_ai_api_key && $open_ai_api_key != ''){
       } catch (PDOException $e) {
         $resultHTML .= "Error: " . $e->getMessage();
       }finally{
-        if($open_ai_request_response != ''){
-          $wc_prod_tags = primex_secure_input($open_ai_request_response);
-          $resultHTML .= '<p class="text-center">OpenAI API has updated the product tags...</p>';
-        }else{
+        $open_ai_request_response = json_decode($open_ai_request_response, true);
+        if(isset($open_ai_request_response['error'])){
           $resultHTML .= '<p class="text-center">OpenAI API could not update the product tags...</p>';
+          $resultHTML .= '<p class="text-center">OpenAI API Error: '.$open_ai_request_response['error']["type"].' - '.$open_ai_request_response['error']["message"].'</p>';
+        }else{
+          if(isset($open_ai_request_response["choices"][0]["text"])){
+            $resultText = $open_ai_request_response["choices"][0]["text"];
+            $wc_prod_tags = primex_secure_input($resultText);
+            $resultHTML .= '<p class="text-center">OpenAI API has updated the product tags...</p>';
+          }else{
+            $resultHTML .= '<p class="text-center">Unknown OpenAI API Error occured on updating the product tags. Please contact the developer.</p>';
+          }
         }
       }
     }
@@ -328,6 +400,8 @@ if($open_ai_api_key && $open_ai_api_key != ''){
 }else{
   $resultHTML .= '<p class="text-center">OpenAI API Key is missing. Started Default Import...</p>';
 }
+
+
 
 // //  open AI ends here 
 
@@ -878,7 +952,7 @@ if($open_ai_api_key && $open_ai_api_key != ''){
                   for($i = $wc_total_images; $i < $primex_total_images; $i++){
 
                     try {
-                      $image_id = woocommerce_primex_api_custom_image_file_upload( $primex_all_image_src_array[$i]['src'], $primex_all_image_src_array[$i]['name'] );
+                      $image_id = woocommerce_primex_api_custom_image_file_upload( $primex_all_image_src_array[$i]['src'], $primex_all_image_src_array[$i]['name'], $wc_product_id );
                     }catch (PDOException $e) {
                       $resultHTML .= "Error: " . $e->getMessage();
                     }finally{
@@ -937,29 +1011,6 @@ if($open_ai_api_key && $open_ai_api_key != ''){
 
             }else{
 
-              // initializing
-              $updated_images_array = [];
-              $missed_images_array = [];
-
-              // adding images
-              foreach($primex_all_image_src_array as $image_key => $single_primex_image){
-                try {
-                  $image_id = woocommerce_primex_api_custom_image_file_upload( $single_primex_image['src'], $single_primex_image['name'] );
-                }catch (PDOException $e) {
-                  $resultHTML .= "Error: " . $e->getMessage();
-                }finally{
-                  if(is_int($image_id)){
-                    array_push($updated_images_array,  [
-                      'id' => $image_id,
-                      'name' => $single_primex_image['name'],
-                      'alt' => $single_primex_image['alt'],
-                    ]);
-                  }else{
-                    array_push($missed_images_array, $image_key + 1);
-                  }
-                }
-              }
-
               // creating product data
               $data = [
                 'name' => $primex_prod_name,
@@ -975,7 +1026,6 @@ if($open_ai_api_key && $open_ai_api_key != ''){
                         'id' => (isset($callBack5->id)) ? $callBack5->id : $key5,
                     ],
                 ],
-                'images' => $updated_images_array,
                 'attributes'  => $attributes_array,
                 'tags'  => $tags_array,
                 'meta_data' =>  $product_meta_data_array
@@ -999,6 +1049,7 @@ if($open_ai_api_key && $open_ai_api_key != ''){
                 //create or update wp-option includes list of product sku for cron 
                 $product_id = $wc_retrieved_product->id;
                 $product_sku = $wc_retrieved_product->sku;
+
 
                 if( $product_id != '' && $product_sku != ''){
 
@@ -1043,6 +1094,79 @@ if($open_ai_api_key && $open_ai_api_key != ''){
                   $resultHTML .= '<p class="text-center">Product ('.$primex_prod_name.') could not be imported!</p>';
                 }
               // product not created ends here
+
+
+
+
+              // get the correct product id
+              try {
+                // retrieving the product
+                $wc_retrieved_product = $woocommerce->get('products/' . strval($wc_product_id));
+              }catch (PDOException $e) {
+                $resultHTML .= "Error: " . $e->getMessage();
+              }finally{
+                $wc_total_images = count($wc_retrieved_product->images);
+                $primex_total_images = count($primex_all_image_src_array);
+                $missed_images_array = [];
+  
+                if($wc_total_images == 0){
+                  $updated_images_array = [];
+                }else{
+                  $updated_images_array = $wc_retrieved_product->images;
+                }
+  
+                if($primex_total_images > $wc_total_images){
+                    for($i = $wc_total_images; $i < $primex_total_images; $i++){
+  
+                      try {
+                        $image_id = woocommerce_primex_api_custom_image_file_upload( $primex_all_image_src_array[$i]['src'], $primex_all_image_src_array[$i]['name'], $wc_product_id );
+                      }catch (PDOException $e) {
+                        $resultHTML .= "Error: " . $e->getMessage();
+                      }finally{
+                        if(is_int($image_id)){
+                          array_push($updated_images_array,  [
+                            'id' => $image_id,
+                            'name' => $primex_all_image_src_array[$i]['name'],
+                            'alt' => $primex_all_image_src_array[$i]['alt'],
+                          ]);
+                        }else{
+                          array_push($missed_images_array, $i + 1);
+                        }
+                      }
+                    }
+                }
+  
+  
+                // creating product data
+                $data = [
+                  'images' => $updated_images_array
+                ];
+              }
+
+
+              try {
+
+                // trying to update a WC product
+                $update_wc_prod = $woocommerce->put('products/' . strval($product_id), $data);
+
+              }catch (PDOException $e) {
+
+                $resultHTML .= "Error: " . $e->getMessage();
+
+              }finally{
+
+                // get the correct product id
+                $wc_retrieved_product = $update_wc_prod;
+                $wc_product_id = $wc_retrieved_product->id;
+
+                //create or update wp-option includes list of product sku for cron 
+                $product_id = $wc_retrieved_product->id;
+                $product_sku = $wc_retrieved_product->sku;
+
+                $resultHTML .= '<p class="text-center">Product ('.$product_id.') => ('.$product_sku.') => ('.$primex_prod_name.') images inserted successfully!</p>';
+
+              }
+
 
             }
 
@@ -1177,7 +1301,9 @@ if($open_ai_api_key && $open_ai_api_key != ''){
                     }
 
                     // variant price
-                    $variant_price = strval(round((floatval($woocommerce_api_mul_val) * floatval($single_variant["CustomerPrice"])), 2));
+                    if(isset($single_variant["CustomerPrice"])){
+                      $variant_price = round((floatval($woocommerce_api_mul_val) * floatval($single_variant["CustomerPrice"])), 2);
+                    }
 
                     // creating variation data
                     $variation_meta_data = [
@@ -1187,7 +1313,7 @@ if($open_ai_api_key && $open_ai_api_key != ''){
                       ],
                       [
                           'key' => 'price',
-                          'value' => $variant_price,
+                          'value' => strval($variant_price),
                       ],
                       [
                           'key' => 'description',
@@ -1285,7 +1411,7 @@ if($open_ai_api_key && $open_ai_api_key != ''){
 
                     // creating variation data
                     $data = [
-                      'regular_price' => $variant_price,
+                      'regular_price' => strval($variant_price),
                       'description' => $single_variant_name,
                       'sku' => strval($primex_api_variant_sku),
                       'image' => [
@@ -1352,13 +1478,229 @@ if($open_ai_api_key && $open_ai_api_key != ''){
       $resultHTML .= '<p class="text-center">Got no results from Primex!</p>';
     }
 
-    }
-    // try catch ends here 
 
   echo $resultHTML;
 
 
   }  // if posted certain values ends
+
+
+
+  // if posted certain values
+  if( isset($_POST["primex_api_page_number"]) && isset($_POST["primex_api_items_per_page"]) && isset($_POST["primex_filter_brands"]) ){
+
+    // to get the options values
+    require_once '../../../../../../wp-config.php';
+
+    // assigning
+    $primex_api_page_number = primex_secure_input($_POST["primex_api_page_number"]);
+    $primex_api_items_per_page = primex_secure_input($_POST["primex_api_items_per_page"]);
+    $primex_filter_brands = $_POST["primex_filter_brands"];
+
+    // php text to array 
+    $primex_filter_brands_array = [];
+    if( trim($primex_filter_brands) != '' ){
+      $primex_filter_brands_array = array_map('trim', explode(',', $primex_filter_brands));
+    }
+
+
+    if( $primex_api_items_per_page == '' || !is_numeric($primex_api_items_per_page)){
+      $primex_api_items_per_page = 200;
+    }
+    if( $primex_api_items_per_page != '' ){
+      if( $primex_api_items_per_page < 1 || $primex_api_items_per_page > 200 ){
+        $primex_api_items_per_page = 200;
+      }
+    }
+
+    // initializing
+    $website_url = '';
+    $woocommerce_api_consumer_key = '';
+    $woocommerce_api_consumer_secret = '';
+    $woocommerce_api_mul_val = 1;
+    $primex_api_base_url = '';
+    $primex_customer_id = '';
+    $primex_api_key = '';
+    $primex_api_language = '';
+
+    $resultHTML = '';
+
+    // assigning values got from wp options
+    if(get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_website_url')){
+      $website_url = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_website_url');
+    }
+    if(get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_woocommerce_api_consumer_key')){
+      $woocommerce_api_consumer_key = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_woocommerce_api_consumer_key');
+    }
+    if(get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_woocommerce_api_consumer_secret')){
+      $woocommerce_api_consumer_secret = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_woocommerce_api_consumer_secret');
+    }
+    if(get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_woocommerce_api_mul_val')){
+      $woocommerce_api_mul_val = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_woocommerce_api_mul_val');
+    }
+    if(get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_primex_api_base_url')){
+      $primex_api_base_url = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_primex_api_base_url');
+    }
+    if(get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_primex_customer_id')){
+      $primex_customer_id = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_primex_customer_id');
+    }
+    if(get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_primex_api_key')){
+      $primex_api_key = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_primex_api_key');
+    }
+    if(get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_primex_api_language')){
+      $primex_api_language = get_option( WOOCOMMERCE_PRIMEX_API_PLUGIN_NAME . '_primex_api_language');
+    }
+
+    // assigning language
+    $language_full_name = "";
+    switch ($primex_api_language) {
+      case "nl-NL":
+        $language_full_name = "Dutch";
+        break;
+      case "en-GB":
+        $language_full_name = "English";
+        break;
+      case "de-DE":
+        $language_full_name = "German";
+        break;
+    }
+
+    // Primex API Queries
+    require_once('PrimexApiQueries.php');
+
+    // instantiating
+    $ApiQuery = new PrimexApiQueries;
+
+    try {
+
+      // sending single product API request to Primex
+      $primex_api_sku_list = $ApiQuery->primex_api_sku_list($primex_api_page_number, $primex_api_items_per_page, $primex_api_base_url, $primex_customer_id, $primex_api_key, $primex_api_language);
+
+      } catch (PDOException $e) {
+
+        $resultHTML .= "Error: " . $e->getMessage();
+
+      }finally{
+
+        // assigning some useful values got from Primex API response
+        $primex_api_sku_list = json_decode($primex_api_sku_list, true);
+
+      }
+      // try catch ends here 
+      $primex_all_sku_array = [];
+      $primex_all_brands_array = [];
+      foreach( $primex_api_sku_list["Master"] as $single_sku_key => $single_sku_value ){
+        if(isset($single_sku_value["Sku"])){
+          array_push($primex_all_sku_array, $single_sku_value["Sku"]);
+          array_push($primex_all_brands_array, $single_sku_value["Brand"]);
+        }
+      }
+
+    // get all available products in WC
+    $primex_products_sku_list = get_option('primex_products_sku_list');
+    if(count($primex_all_sku_array) > 0){
+      $resultHTML .= '<p class="text-center">Click any items below to import: (Green ones are already imported!)</p>';
+      $resultHTML .= '<style>
+          .primex_clickable_catalog{
+              cursor: pointer;
+          }
+          .primex_catalog{
+              margin-right: 10px;
+              display: inline-block;
+          }
+          .primex_catalog:last-child{
+              margin-right: 0;
+          }
+      </style>';
+      $total_iteration = 0;
+      $filtered_sku_array = [];
+      foreach( $primex_all_sku_array as $primex_single_sku_key => $primex_single_sku_value ){
+        if( count($primex_filter_brands_array) > 0 ){
+          if (!in_array($primex_all_brands_array[$primex_single_sku_key], $primex_filter_brands_array)){
+            continue;
+          }
+        }
+        if (in_array($primex_single_sku_value, $primex_products_sku_list)){
+          $resultHTML .= '<span class="text-success primex_catalog">'.$primex_single_sku_value.' ('.$primex_all_brands_array[$primex_single_sku_key].')</span>';
+          array_push($filtered_sku_array, $primex_single_sku_value);
+          $total_iteration++;
+        }else{
+          $resultHTML .= '<span class="text-danger primex_catalog primex_clickable_catalog"  data-value="'.$primex_single_sku_value.'">'.$primex_single_sku_value.' ('.$primex_all_brands_array[$primex_single_sku_key].')</span>';
+          array_push($filtered_sku_array, $primex_single_sku_value);
+          $total_iteration++;
+        }
+        
+      }
+
+      // import all button 
+      $resultHTML .= '<br><br>';
+      $resultHTML .= '<p class="text-center">Showing total '.$total_iteration.' Products.</p>';
+      $resultHTML .= '<br>';
+      $resultHTML .= '<button type="submit" id="woocommerce_primex_api_import_all_button" class="woocommerce_primex_api_import_all_button btn btn-warning mb-3" name="woocommerce_primex_api_import_all_button">Import All</button>';
+
+      $resultHTML .= '
+      <script>
+
+        $(".primex_clickable_catalog").click(function(){
+          $("#woocommerce_primex_api_product_sku_field").val($(this).data("value"));
+        });
+
+        $(".woocommerce_primex_api_import_all_button").click(async function(event){
+          event.preventDefault();
+          let filtered_sku_array = '.json_encode($filtered_sku_array).';
+          let primex_api_product_sku;
+          let post_url = "' . WOOCOMMERCE_PRIMEX_API_PLUGIN_URL . 'inc/shortcodes/includes/post.php";
+          let current_url = $(location).attr("href");
+          let primex_api_sku_list_button_text = $("#primex_api_sku_list").html();
+          let woocommerce_primex_api_submit_button_text = $("#woocommerce_primex_api_submit_button").html();
+          $("#primex_api_sku_list").attr("disabled", true);
+          $("#primex_api_sku_list").html("Importing...");
+          $("#woocommerce_primex_api_submit_button").attr("disabled", true);
+          $("#woocommerce_primex_api_submit_button").html("Importing...");
+          $("#result").html("<h6>Please do not refresh or close this window while importing...</h6>");
+          $("#result h6").addClass("text-center text-danger");
+          
+          for (let index = 0; index < filtered_sku_array.length; index++) {
+            primex_api_product_sku = filtered_sku_array[index];
+            await $.ajax({
+                type: "POST",
+                url: post_url,
+                data: {primex_api_product_sku, current_url}, 
+                success: function(result){
+                    $("#result").html(result);
+                    if(index < filtered_sku_array.length){
+                      $("#primex_api_sku_list").attr("disabled", true);
+                      $("#primex_api_sku_list").html("Importing...");
+                      $("#woocommerce_primex_api_submit_button").attr("disabled", true);
+                      $("#woocommerce_primex_api_submit_button").html("Importing...");
+                      $("#result").prepend("<h6>"+(index+1)+" Products Have been Imported or Updated So Far...</h6>");
+                      $("#result").prepend("<h6>Please do not refresh or close this window while importing...</h6>");
+                      $("#result h6").addClass("text-center text-danger");
+                    }
+                }
+            });
+          }
+
+          $("#result").prepend("<h6>All The Selected "+filtered_sku_array.length+" Products Have Been Successfully Imported or Updated!</h6>");
+          $("#result h6").addClass("text-center text-success");
+          $("#primex_api_sku_list").attr("disabled", false);
+          $("#primex_api_sku_list").html(primex_api_sku_list_button_text);
+          $("#woocommerce_primex_api_submit_button").attr("disabled", false);
+          $("#woocommerce_primex_api_submit_button").html(woocommerce_primex_api_submit_button_text);
+
+        });
+      </script>
+      ';
+    }
+
+    echo $resultHTML;
+
+  }
+  // if posted certain values ends
+
+
+
+
 
 }   // if posted ends
 
